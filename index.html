@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vehicle Fuel Log</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7f9;--card:#fff;--tx:#1b2430;--mut:#6b7686;--bd:#d9dee5;--ac:#1f6feb;--hd:#e9edf3;--wk:#f1f4f8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12161c;--card:#1a2029;--tx:#e6eaf0;--mut:#8f9aab;--bd:#2c3542;--ac:#5b9dff;--hd:#232b37;--wk:#1f2631}}
+:root[data-theme="dark"]{--bg:#12161c;--card:#1a2029;--tx:#e6eaf0;--mut:#8f9aab;--bd:#2c3542;--ac:#5b9dff;--hd:#232b37;--wk:#1f2631}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{padding:14px 16px 8px}
+h1{margin:0 0 2px;font-size:20px}
+header p{margin:0;color:var(--mut);font-size:13px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;padding:8px 16px;align-items:center}
+input,button,select{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:6px 10px}
+button{cursor:pointer}button.p{background:var(--ac);border-color:var(--ac);color:#fff}
+.stat{margin-left:auto;color:var(--mut)}.stat b{color:var(--tx)}
+.wrap{margin:0 16px 24px;overflow:auto;max-height:calc(100vh - 150px);border:1px solid var(--bd);border-radius:8px;background:var(--card)}
+table{border-collapse:separate;border-spacing:0;min-width:100%}
+th,td{border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:0;text-align:center;white-space:nowrap}
+thead th{position:sticky;top:0;background:var(--hd);z-index:3;padding:6px 4px;font-size:12px}
+tfoot td{position:sticky;bottom:0;background:var(--hd);z-index:3;font-weight:600;padding:6px 4px}
+.c1,.c2,.c3{position:sticky;background:var(--card);z-index:2;text-align:left;padding:4px 8px}
+thead .c1,thead .c2,thead .c3,tfoot .c1,tfoot .c2,tfoot .c3{background:var(--hd);z-index:4}
+.c1{left:0;min-width:92px;font-weight:600}.c2{left:92px;min-width:120px;color:var(--mut)}.c3{left:212px;min-width:70px;color:var(--mut);font-size:12px;border-right:2px solid var(--bd)}
+td input{width:54px;border:0;border-radius:0;background:transparent;text-align:right;padding:6px 4px}
+td input:focus{outline:2px solid var(--ac);outline-offset:-2px;background:var(--card)}
+td.wk{background:var(--wk)}td.wk input{background:transparent}
+.tot{min-width:70px;font-weight:600;padding:4px 8px;background:var(--hd)}
+.hide{display:none}td.od{padding:6px;min-width:70px;text-align:right;color:var(--mut)}tr.or>td{border-bottom:2px solid var(--bd)}
+</style></head><body>
+<header><h1>Vehicle Fuel Log</h1><p>Enter liters per day and each vehicle's km/L; distance is computed (liters × km/L). Saved automatically in this browser. Use Export CSV to keep a copy.</p></header>
+<div class="bar">
+<input type="month" id="month">
+<input type="search" id="q" placeholder="Search vehicle or plate…">
+<button id="exp" class="p">Export CSV</button>
+<button id="imp">Import CSV</button><input type="file" id="file" accept=".csv" class="hide">
+<button id="clr">Clear month</button>
+<span class="stat"><b id="gt">0</b> L · <b id="gk">0</b> km · <b id="ge">–</b> km/L</span>
+</div>
+<div class="wrap"><table id="t"><thead></thead><tbody></tbody><tfoot></tfoot></table></div>
+<script>
+const RAW=`F5-334 N/A
+F5-372 N/A
+F16-111 N/A
+F16-208 N/A
+F16-211 N/A
+F16-215 N/A
+G1-200 N/A
+G1-607 N/A
+H1-2349 SAN-444
+H1-2637 SAN-885
+H1-3303 SBP-800
+H1-3346 SBP-804
+H1-4074 SEW-323
+H1-4445 SGY-858
+H1-4469 SBY-236
+H1-4577 SFH-347
+H1-4624 SGS-838
+H1-4972 SFH-592
+H1-4973 SEW-219
+H1-5181 SKA-710
+H1-5191 SKA-730
+H1-5212 SKA-714
+H1-5213 SKA-716
+H1M-5219 SKA-731
+H1-5340 SHY-774
+H1-5886 XSS-651
+H1-5887 AEW-851 (013601)
+H1M-5888 POZ-373 (013603)
+H1-5889 PUI-530 (013610)
+H1-5890 WMP-140
+H1-5891 RNF-827
+H1-5896 XMJ-720
+H1-5898 ABG-2815
+H1M-5899 UOY-171
+H1-5902 NQC-313
+H1M-5944 ABI-1115
+H1-6073 AVA 7597
+H1-6074 AVA-6542
+H1-6129 ABI-1586
+H1-6248 SCD-1655/B1-K147
+H1-6509 FO-G953
+H1-6510 FO-L408
+H1-6846 AAB-5586
+H1-7436 NDY-6792
+H1-7802 ICL-1759
+H1-8552 ARA-1584
+H1-8878 ALA-6489
+H1-8879 CAM-6125
+H1-8912 NFQ-8536/ B9 B547
+H1-8913 NET-1121/ S2 J025
+H1-8914 NET-7279/ S3 I963
+H1-8931 YAA-3599 / C1 0444
+H1-9108 AEX-373
+H1-9133 NGF-2129
+H1-9481 ABI-1148
+H1-9528 ABS-6277
+H1-9529 IAE-4278
+H1-9639 IDI-2146
+H1-9640 IDI-4012
+H1-9778 ABI-2969
+H1-9795 IAE-3961
+H1-9796 IAE-3150/S6D306
+H1-9797 IAE-3463/S7R614
+H1-9865 IAE-3604
+H1-9866 IAE-4077
+H1-9868 IAE-8325
+H1-9870 NFO-7614
+H1-9949 NIJ-8269
+H1-10098 IAE-3602
+H1-10099 IAE-8307
+H1-10141 IAD-3667
+H1-10172 IAC-4705
+H1-10226 IAE-3379
+H1-10228 IAE-9056
+H1-10418 IAF-9379
+H1-10419 IAF-9382
+H1-10454 IAF-8234
+H1-10499 IAE-9393
+H1-10584 IAF-8233
+H1-10589 NKM-3113
+H1-10590 NKM-3409
+H1-10591 NKM-3434
+H1-10616 NKS-4907
+H1-10718 NFO-9432
+H1-10737 IAE-9540
+EH1-2 SCA-2102
+EH1-19 SNG-1114
+EH1-20 SNG-1123
+EH1-24 SNG-1125
+EH1-28 NNV-2844
+H2-306 ACN-1049
+H2-460 JOB-337 (SNA-6473)
+H2-591 D2-R605
+H3-6899 JM-9537
+H3-6908 JM-9536
+H3-7187 D2-J296
+H3-7192 SND-4727
+H3-7193 SND-4728
+H3-7208 SNN-3968
+H3-7209 SNN-3969
+H3-7210 SNN-3970
+H3-7211 SNN-3971
+H3-7238 SNN-2147
+H4-154 JM-5676
+H4-155 JM5677
+H4-186 D2-Q018
+H6-153 JM-9105
+H12-44 NP-1405
+H14-6 1312-00000445299
+H16-12 SNI-4203
+H17-10 N/A
+H21-27 N/A
+J1-201 N/A
+J1-202 N/A
+J1-263 N/A
+J6-48 N/A
+J6-49 N/A
+L1-1192 N/A
+L1-1717 N/A
+L1-1718 N/A
+L2-1719 N/A
+L2-1458 N/A
+LX-135 N/A
+K3-19 N/A
+K4-33 N/A
+T1-106 N/A
+T1-107 N/A`;
+const V=RAW.split("\n").map(l=>{const s=l.trim().split(/\s+/);return{id:s[0],plate:s.slice(1).join(" ")}});
+const $=s=>document.querySelector(s),mEl=$("#month");
+let data={},days=30;
+const key=()=>"fuel:"+mEl.value;
+const load=()=>{try{data=JSON.parse(localStorage.getItem(key()))||{}}catch(e){data={}}};
+const save=()=>{try{localStorage.setItem(key(),JSON.stringify(data))}catch(e){}};
+const num=x=>{const n=parseFloat(x);return isNaN(n)?0:n};
+const fmt=n=>Math.round(n*100)/100;
+function build(){
+ const pre="";const [y,m]=mEl.value.split("-").map(Number);days=new Date(y,m,0).getDate();load();
+ let h='<tr><th class="c1">Vehicle</th><th class="c2">Plate</th><th class="c3"></th>',f='<tr><td class="c1">Total</td><td class="c2"></td><td class="c3">Fuel (L)</td>';
+ for(let d=1;d<=days;d++){h+=`<th>${d}</th>`;f+=`<td id="ct${d}">0</td>`}
+ h+='<th>Liters</th><th>km/L</th><th>Distance (km)</th><th>Start odo</th><th>End odo</th></tr>';f+='<td id="gt2">0</td><td id="ge2"></td><td id="gk2">0</td><td></td><td></td></tr>';
+ $("thead").innerHTML=h;$("tfoot").innerHTML=f;
+ let b="";
+ V.forEach((v,i)=>{let ob="";const sk=(v.id+" "+v.plate).toLowerCase();b+=`<tr data-i="${i}" data-s="${sk}"><td class="c1" rowspan="2">${v.id}</td><td class="c2" rowspan="2">${v.plate}</td><td class="c3">Fuel (L)</td>`;
+  for(let d=1;d<=days;d++){const w=[0,6].includes(new Date(y,m-1,d).getDay());const val=(data[v.id]||{})[pre+d];
+   b+=`<td class="${w?"wk":""}"><input type="number" step="any" min="0" inputmode="decimal" data-v="${v.id}" data-d="${pre+d}" value="${val??""}"></td>`;ob+=`<td class="${w?"wk":""} od" id="o${i}_${d}"></td>`}
+  b+=`<td class="tot" rowspan="2" id="rt${i}"></td><td class="tot" rowspan="2"><input type="number" step="any" min="0" inputmode="decimal" data-v="${v.id}" data-d="e" value="${(data[v.id]||{}).e??""}"></td><td class="tot" rowspan="2" id="rk${i}"></td><td class="tot" rowspan="2"><input type="number" step="any" min="0" inputmode="decimal" data-v="${v.id}" data-d="o" value="${(data[v.id]||{}).o??""}"></td><td class="tot" rowspan="2" id="re${i}"></td></tr><tr class="or" data-s="${sk}"><td class="c3">Odometer</td>${ob}</tr>`});
+ $("tbody").innerHTML=b;totals();filter();
+}
+function totals(){
+ let g=0,gk=0,gl=0;const ct=Array(days+1).fill(0);
+ V.forEach((v,i)=>{let l=0;const o=data[v.id]||{},e=num(o.e),hs=o.o!==undefined&&o.o!=="";let cum=num(o.o);
+  for(let d=1;d<=days;d++){const a=num(o[d]);l+=a;cum+=a*e;ct[d]+=a;const c=$("#o"+i+"_"+d);if(c)c.textContent=hs&&e?fmt(cum):""}
+  const k=l*e;g+=l;gk+=k;if(k)gl+=l;
+  $("#rt"+i).textContent=l?fmt(l):"";$("#rk"+i).textContent=k?fmt(k):"";$("#re"+i).textContent=hs&&k?fmt(num(o.o)+k):""});
+ for(let d=1;d<=days;d++)$("#ct"+d).textContent=ct[d]?fmt(ct[d]):"";
+ const fe=gk?fmt(gk/gl):"–";$("#gt2").textContent=fmt(g);$("#gt").textContent=fmt(g);$("#gk2").textContent=fmt(gk);$("#gk").textContent=fmt(gk);$("#ge").textContent=fe;$("#ge2").textContent=gk?fe:"";
+}
+function filter(){const q=$("#q").value.trim().toLowerCase();document.querySelectorAll("tbody tr").forEach(r=>r.classList.toggle("hide",q&&!r.dataset.s.includes(q)))}
+$("tbody").addEventListener("input",e=>{const t=e.target;if(!t.dataset.v)return;
+ const o=data[t.dataset.v]=data[t.dataset.v]||{};
+ if(t.value==="")delete o[t.dataset.d];else o[t.dataset.d]=t.value;
+ save();totals()});
+$("#q").addEventListener("input",filter);
+mEl.addEventListener("change",build);
+$("#clr").onclick=()=>{if(confirm("Clear all fuel entries for "+mEl.value+"?")){data={};save();build()}};
+$("#exp").onclick=()=>{
+ let c="Vehicle,Plate,"+Array.from({length:days},(_,i)=>i+1).join(",")+",Total L,km/L,Distance km,Start odo,End odo\n";
+ V.forEach(v=>{const o=data[v.id]||{};let l=0;const r=[];for(let d=1;d<=days;d++){r.push(o[d]??"");l+=num(o[d])}
+  c+=`"${v.id}","${v.plate}",${r.join(",")},${fmt(l)},${o.e??""},${o.e?fmt(l*num(o.e)):""},${o.o??""},${o.o&&o.e?fmt(num(o.o)+l*num(o.e)):""}\n`});
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([c],{type:"text/csv"}));a.download="fuel-"+mEl.value+".csv";a.click()};
+$("#imp").onclick=()=>$("#file").click();
+$("#file").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+ r.onload=()=>{const L=r.result.trim().split(/\r?\n/).slice(1);data={};
+  L.forEach(l=>{const c=l.match(/("([^"]*)"|[^,]*)(,|$)/g).map(x=>x.replace(/,$/,"").replace(/^"|"$/g,""));
+   const id=c[0];for(let d=1;d<=days;d++){if(c[1+d]!==undefined&&c[1+d]!=="")(data[id]=data[id]||{})[d]=c[1+d]}const e=c[days+3],oo=c[days+5];if(e)(data[id]=data[id]||{}).e=e;if(oo)(data[id]=data[id]||{}).o=oo});
+  save();build()};r.readAsText(f);e.target.value=""};
+const n=new Date();mEl.value=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0");build();
+</script></body></html>
