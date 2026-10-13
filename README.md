@@ -14,8 +14,11 @@ A single-page web app for logging fuel per vehicle and monitoring distance and o
 - Odometer = start odometer + cumulative distance; any day's odometer can be edited manually
   and later days continue from it
 
+## Themes
+DPWH (default), Auto, Light, Dark, Forest, Amber, Ocean. The choice is saved per browser.
+
 ## Notes
-- Data is saved in the browser (localStorage). Export CSV regularly as a backup.
+- Data is saved in each user's own browser (localStorage); it is not shared between users. Export CSV regularly as a backup.
 - Manual odometer edits are not included in the CSV.
 - Vehicle list: edit the `RAW` string near the top of the script in `index.html`
   (one vehicle per line: `PropertyNo Plate`).
