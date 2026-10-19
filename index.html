@@ -204,7 +204,7 @@ $("#ea").onclick=()=>{
  M.textContent="";addEN({v:v.id,l,f,t});$("#eliters").value=""};
 $("#elist").addEventListener("click",e=>{const k=e.target.dataset.k;if(k===undefined)return;const x=EN[+k];EN.splice(+k,1);if(DB&&x&&x.k)DB.doc("entries/"+x.k).delete().catch(()=>{});else saveEN();renderEN();totals()});
 const key=()=>"fuel:"+mEl.value;
-const FIREBASE={projectId:"bid-monitoring-f1308",apiKey:""}; // GitHub Pages version: paste your Firebase web apiKey here (same project as the bid monitoring site)
+const FIREBASE={projectId:"bid-monitoring-f1308",apiKey:"AIzaSyBfL_LTNUoO28ls9KEsKreMdXHwfHFqndo"}; // GitHub Pages version: paste your Firebase web apiKey here (same project as the bid monitoring site)
 function fsAdapter(cfg){const base="https://firestore.googleapis.com/v1/projects/"+cfg.projectId+"/databases/(default)/documents/",k="key="+encodeURIComponent(cfg.apiKey);let lw=0;
  const rq=async(m,u,b)=>{const r=await fetch(u,{method:m,headers:b?{"Content-Type":"application/json"}:undefined,body:b?JSON.stringify(b):undefined});if(!r.ok)throw{code:r.status===403?"permission_denied":"unavailable"};if(m!=="GET")lw=Date.now();return r.json()};
  return{doc:p=>{const q=p.split("/"),u=base+"fuel_"+q[0]+"/"+encodeURIComponent(q[1])+"?"+k;
