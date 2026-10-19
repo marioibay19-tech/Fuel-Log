@@ -2,6 +2,7 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Vehicle Fuel Log</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7f9;--card:#fff;--tx:#1b2430;--mut:#6b7686;--bd:#d9dee5;--ac:#1f6feb;--hd:#e9edf3;--wk:#f1f4f8}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12161c;--card:#1a2029;--tx:#e6eaf0;--mut:#8f9aab;--bd:#2c3542;--ac:#5b9dff;--hd:#232b37;--wk:#1f2631;--hb:#233b66}}
@@ -34,10 +35,12 @@ td.wk{background:var(--wk)}td.wk input{background:transparent}
 :root[data-theme="ocean"]{--hb:#0b6e94;--bg:#eef5f9;--card:#fff;--tx:#10222e;--mut:#5a7384;--bd:#cbdbe6;--ac:#0b7ea8;--hd:#dcebf3;--wk:#e9f2f7}
 .wrap,.card{box-shadow:0 1px 3px #0000001a}
 :root[data-theme="dpwh"]{--hb:#0a2d6e;--bg:#f3f5fa;--card:#fff;--tx:#14213d;--mut:#5b6785;--bd:#cfd6e6;--ac:#0b3d91;--hd:#e3e9f5;--wk:#eef1f8}
-:root[data-theme="dpwh"] header{border-bottom:4px solid #fcd116;box-shadow:0 4px 0 #ce1126}
+:root[data-theme="dpwh"] header{border-bottom:4px solid #f7931e}
+:root[data-theme="dpwh"] body{font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+:root[data-theme="dpwh"] .tabs button.on,:root[data-theme="dpwh"] button.p{background:#f7931e;border-color:#f7931e;color:#fff}
 :root[data-theme="dpwh"] .tabs{margin-top:8px}
 </style></head><body>
-<header><div><h1>Vehicle Fuel Log</h1><p>Enter liters per day and each vehicle's km/L; distance is computed (liters × km/L). Saved automatically in this browser. Use Export CSV to keep a copy.</p></div><select id="theme" title="Theme"><option value="dpwh">Theme: DPWH</option><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="forest">Forest</option><option value="amber">Amber</option><option value="ocean">Ocean</option></select></header>
+<header><div><h1>Vehicle Fuel Log</h1><p>Enter liters per day and each vehicle's km/L; distance is computed (liters × km/L). Saved automatically in this browser. Use Export CSV to keep a copy.</p><p id="sync"></p><button id="mig" class="hide" style="margin-top:6px">Upload this browser's saved data to shared</button></div><select id="theme" title="Theme"><option value="dpwh">Theme: DPWH</option><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="forest">Forest</option><option value="amber">Amber</option><option value="ocean">Ocean</option></select></header>
 <div class="tabs"><button id="tin">Input</button><button id="tmon">Monitoring</button></div>
 <div class="bar" data-p="mon">
 <input type="month" id="month"><select id="week"></select>
@@ -198,11 +201,59 @@ $("#ea").onclick=()=>{
  if(!f){M.textContent="Enter the start date.";return}
  if(ud(t)<ud(f)){M.textContent="End date is before the start date.";return}
  if((ud(t)-ud(f))/864e5>366){M.textContent="Date range is too long.";return}
- M.textContent="";EN.push({v:v.id,l,f,t});saveEN();renderEN();$("#eliters").value="";totals()};
-$("#elist").addEventListener("click",e=>{const k=e.target.dataset.k;if(k===undefined)return;EN.splice(+k,1);saveEN();renderEN();totals()});
+ M.textContent="";addEN({v:v.id,l,f,t});$("#eliters").value=""};
+$("#elist").addEventListener("click",e=>{const k=e.target.dataset.k;if(k===undefined)return;const x=EN[+k];EN.splice(+k,1);if(DB&&x&&x.k)DB.doc("entries/"+x.k).delete().catch(()=>{});else saveEN();renderEN();totals()});
 const key=()=>"fuel:"+mEl.value;
-const load=()=>{try{data=JSON.parse(localStorage.getItem(key()))||{}}catch(e){data={}}};
-const save=()=>{try{localStorage.setItem(key(),JSON.stringify(data))}catch(e){}};
+const FIREBASE={projectId:"bid-monitoring-f1308",apiKey:""}; // GitHub Pages version: paste your Firebase web apiKey here (same project as the bid monitoring site)
+function fsAdapter(cfg){const base="https://firestore.googleapis.com/v1/projects/"+cfg.projectId+"/databases/(default)/documents/",k="key="+encodeURIComponent(cfg.apiKey);let lw=0;
+ const rq=async(m,u,b)=>{const r=await fetch(u,{method:m,headers:b?{"Content-Type":"application/json"}:undefined,body:b?JSON.stringify(b):undefined});if(!r.ok)throw{code:r.status===403?"permission_denied":"unavailable"};if(m!=="GET")lw=Date.now();return r.json()};
+ return{doc:p=>{const q=p.split("/"),u=base+"fuel_"+q[0]+"/"+encodeURIComponent(q[1])+"?"+k;
+   return{set:d=>rq("PATCH",u,{fields:{j:{stringValue:JSON.stringify(d)}}}),delete:()=>rq("DELETE",u)}},
+  collection:c=>({onSnapshot:(cb,er)=>{let last="";const poll=async()=>{const t0=Date.now();try{const docs=[];let tok="";
+    do{const o=await rq("GET",base+"fuel_"+c+"?pageSize=300&"+k+(tok?"&pageToken="+encodeURIComponent(tok):""));
+     (o.documents||[]).forEach(x=>{const id=x.name.split("/").pop();let d={};try{d=JSON.parse(x.fields.j.stringValue)}catch(e){}docs.push({id,data:()=>d})});tok=o.nextPageToken||""}while(tok);
+    if(t0<lw)return;const s2=JSON.stringify(docs.map(x=>[x.id,x.data()]));if(s2===last)return;last=s2;cb({docs})}catch(e){if(er)er(e)}};poll();setInterval(poll,3000)}})}}
+let DB=null,ALL={},pend={},writing={},lm="",tm=null,busy=false,first=true;
+const clone=x=>JSON.parse(JSON.stringify(x));
+const setSync=t=>{$("#sync").textContent=t};
+const load=()=>{
+ if(DB){if(lm!==mEl.value){const m=mEl.value;lm=m;data={};
+  Object.keys(ALL).forEach(id=>{const x=ALL[id];if(x.m===m)data[x.v]=clone(x.d||{})});
+  Object.keys(pend).forEach(id=>{const p=pend[id];if(p.m===m){if(p.d)data[p.v]=clone(p.d);else delete data[p.v]}})}}
+ else{try{data=JSON.parse(localStorage.getItem(key()))||{}}catch(e){data={}}}};
+const save=vid=>{
+ if(!DB){try{localStorage.setItem(key(),JSON.stringify(data))}catch(e){}return}
+ const m=mEl.value;const vs=vid?[vid]:Object.keys(data);
+ if(!vid)Object.keys(ALL).forEach(id=>{if(ALL[id].m===m&&!vs.includes(ALL[id].v))vs.push(ALL[id].v)});
+ vs.forEach(v=>{pend[m+"_"+v]={m,v,d:data[v]?clone(data[v]):null}});
+ clearTimeout(tm);tm=setTimeout(flush,500)};
+async function flush(){if(busy)return;busy=true;
+ try{for(let ids=Object.keys(pend);ids.length;ids=Object.keys(pend)){const id=ids[0],p=pend[id];delete pend[id];writing[id]=1;
+  try{const r=DB.doc("logs/"+id);if(!p.d||!Object.keys(p.d).length)await r.delete();else await r.set({m:p.m,v:p.v,d:p.d});setSync("Shared: saved")}
+  catch(e){setSync(e&&e.code==="invalid_argument"?"View-only: you can't save changes":"Could not save ("+((e&&e.code)||"error")+")")}
+  delete writing[id]}}finally{busy=false}}
+function refreshFromDB(){const m=mEl.value,seen={};
+ Object.keys(ALL).forEach(id=>{const x=ALL[id];if(x.m!==m)return;seen[x.v]=1;if(pend[id]||writing[id])return;data[x.v]=clone(x.d||{})});
+ Object.keys(data).forEach(v=>{const id=m+"_"+v;if(!seen[v]&&!pend[id]&&!writing[id])delete data[v]});
+ totals()}
+function addEN(x){x.k="e"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);EN.push(x);
+ if(DB)DB.doc("entries/"+x.k).set({v:x.v,l:x.l,f:x.f,t:x.t}).catch(e=>setSync("Could not save entry ("+((e&&e.code)||"error")+")"));else saveEN();
+ renderEN();totals()}
+function localKeys(){const ks=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^fuel:\d{4}-\d{2}$/.test(k)||k==="fuel:entries")ks.push(k)}}catch(e){}return ks}
+function chkMig(){$("#mig").classList.toggle("hide",!(DB&&localKeys().some(k=>{try{const v=JSON.parse(localStorage.getItem(k));return k==="fuel:entries"?v&&v.length:v&&Object.keys(v).length}catch(e){return false}})))}
+$("#mig").onclick=()=>{for(const k of localKeys()){try{const v=JSON.parse(localStorage.getItem(k));
+  if(k==="fuel:entries"){(v||[]).forEach(x=>addEN({v:x.v,l:x.l,f:x.f,t:x.t}))}
+  else{const m=k.slice(5);Object.keys(v||{}).forEach(vid=>{const id=m+"_"+vid;if(Object.keys(v[vid]||{}).length)pend[id]={m,v:vid,d:Object.assign({},v[vid],ALL[id]?ALL[id].d:{})}})}
+  localStorage.removeItem(k)}catch(e){}}
+ clearTimeout(tm);flush();chkMig();setSync("Shared: uploaded")};
+async function initDB(){
+ try{if(window.claude&&window.claude.use)DB=await window.claude.use("db");else if(FIREBASE.apiKey)DB=fsAdapter(FIREBASE)}catch(e){DB=null}
+ if(!DB){setSync("Local only: saved in this browser");return}
+ setSync("Shared: connecting…");
+ try{const u=await window.claude.use("user");const w=u&&u.can?await u.can("data.write"):null;if(w===false)setSync("Shared: view-only (you can read but not save)")}catch(e){}
+ DB.collection("logs").onSnapshot(s=>{ALL={};s.docs.forEach(d=>{ALL[d.id]=d.data()});
+  if(first){first=false;lm="";build();if($("#sync").textContent.indexOf("view-only")<0)setSync("Shared: live (everyone sees the same entries)");chkMig()}else refreshFromDB()},e=>setSync("Shared: connection problem ("+((e&&e.code)||"error")+")"));
+ DB.collection("entries").onSnapshot(s=>{EN=s.docs.map(d=>Object.assign({k:d.id},d.data())).sort((a,b)=>a.f<b.f?-1:a.f>b.f?1:0);renderEN();totals()},()=>{})}
 const num=x=>{const n=parseFloat(x);return isNaN(n)?0:n};
 const fmt=n=>Math.round(n*100)/100;
 function fillWeeks(){const [y,m]=mEl.value.split("-").map(Number),n=new Date(y,m,0).getDate(),W=$("#week"),rs=[];let s=1;
@@ -220,7 +271,7 @@ function build(){
  V.forEach((v,i)=>{let ob="";const sk=(v.id+" "+v.plate).toLowerCase();b+=`<tr data-i="${i}" data-s="${sk}"><td class="c1" rowspan="2">${v.id}</td><td class="c2" rowspan="2">${v.plate}</td><td class="c3">Fuel (L)</td>`;
   for(let d=d0;d<=d1;d++){const w=[0,6].includes(new Date(y,m-1,d).getDay());const val=(data[v.id]||{})[pre+d];
    b+=`<td class="${w?"wk":""}"><input type="number" step="any" min="0" inputmode="decimal" id="f${i}_${d}" data-v="${v.id}" data-d="${pre+d}" value=""></td>`;ob+=`<td class="${w?"wk":""} od"><input type="number" step="any" min="0" inputmode="decimal" class="odo" id="o${i}_${d}" data-v="${v.id}" data-d="o${d}" value="${(data[v.id]||{})["o"+d]??""}"></td>`}
-  b+=`<td class="tot" rowspan="2" id="wk${i}"></td><td class="tot" rowspan="2" id="rt${i}"></td><td class="tot" rowspan="2"><input type="number" step="any" min="0" inputmode="decimal" data-v="${v.id}" data-d="e" value="${(data[v.id]||{}).e??""}"></td><td class="tot" rowspan="2" id="rk${i}"></td><td class="tot" rowspan="2"><input type="number" step="any" min="0" inputmode="decimal" data-v="${v.id}" data-d="o" value="${(data[v.id]||{}).o??""}"></td><td class="tot" rowspan="2" id="re${i}"></td></tr><tr class="or" data-s="${sk}"><td class="c3">Odometer</td>${ob}</tr>`});
+  b+=`<td class="tot" rowspan="2" id="wk${i}"></td><td class="tot" rowspan="2" id="rt${i}"></td><td class="tot" rowspan="2"><input type="number" step="any" min="0" inputmode="decimal" data-v="${v.id}" id="e${i}" data-d="e" value="${(data[v.id]||{}).e??""}"></td><td class="tot" rowspan="2" id="rk${i}"></td><td class="tot" rowspan="2"><input type="number" step="any" min="0" inputmode="decimal" data-v="${v.id}" id="s${i}" data-d="o" value="${(data[v.id]||{}).o??""}"></td><td class="tot" rowspan="2" id="re${i}"></td></tr><tr class="or" data-s="${sk}"><td class="c3">Odometer</td>${ob}</tr>`});
  $("#t tbody").innerHTML=b;totals();filter();
 }
 function totals(){
@@ -228,7 +279,7 @@ function totals(){
  V.forEach((v,i)=>{let l=0,wl=0;const o=data[v.id]||{},e=num(o.e),hs=o.o!==undefined&&o.o!=="";let cum=num(o.o),kn=!!(hs&&e);
   for(let d=1;d<=days;d++){const dv=(DM[v.id]||{})[d]||0,a=num(o[d])+dv;l+=a;const fc=$("#f"+i+"_"+d);if(fc&&document.activeElement!==fc)fc.value=Math.abs(a)>1e-9?fmt(a):"";cum+=a*e;const ov=o["o"+d],has=ov!==undefined&&ov!=="";if(has){cum=num(ov);kn=true}ct[d]+=a;if(d>=d0&&d<=d1)wl+=a;const c=$("#o"+i+"_"+d);if(c){c.classList.toggle("ovr",has);if(document.activeElement!==c)c.value=has?ov:(kn?fmt(cum):"")}}
   wg+=wl;const wc=$("#wk"+i);if(wc)wc.textContent=wl?fmt(wl):"";const k=l*e;g+=l;gk+=k;if(k)gl+=l;
-  $("#rt"+i).textContent=l?fmt(l):"";$("#rk"+i).textContent=k?fmt(k):"";$("#re"+i).textContent=kn?fmt(cum):""});
+  const ei=$("#e"+i),si=$("#s"+i);if(ei&&document.activeElement!==ei)ei.value=o.e??"";if(si&&document.activeElement!==si)si.value=o.o??"";$("#rt"+i).textContent=l?fmt(l):"";$("#rk"+i).textContent=k?fmt(k):"";$("#re"+i).textContent=kn?fmt(cum):""});
  for(let d=1;d<=days;d++){const x=$("#ct"+d);if(x)x.textContent=ct[d]?fmt(ct[d]):""}
  const fe=gk?fmt(gk/gl):"–";$("#gt2").textContent=fmt(g);$("#wt2").textContent=fmt(wg);$("#gt").textContent=fmt(g);$("#gk2").textContent=fmt(gk);$("#gk").textContent=fmt(gk);$("#ge").textContent=fe;$("#ge2").textContent=gk?fe:"";
 }
@@ -236,7 +287,7 @@ function filter(){const q=$("#q").value.trim().toLowerCase();document.querySelec
 $("#t tbody").addEventListener("input",e=>{const t=e.target;if(!t.dataset.v)return;
  const o=data[t.dataset.v]=data[t.dataset.v]||{};
  const dd=t.dataset.d;if(t.value==="")delete o[dd];else if(/^\d+$/.test(dd))o[dd]=String(num(t.value)-((DM[t.dataset.v]||{})[dd]||0));else o[dd]=t.value;
- save();totals()});
+ save(t.dataset.v);totals()});
 $("#q").addEventListener("input",filter);$("#t tbody").addEventListener("change",totals);
 mEl.addEventListener("change",()=>{fillWeeks();build()});$("#week").addEventListener("change",build);
 $("#clr").onclick=()=>{if(confirm("Clear all fuel entries for "+mEl.value+"?")){data={};save();build()}};
@@ -251,5 +302,5 @@ $("#file").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileR
   L.forEach(l=>{const c=l.match(/("([^"]*)"|[^,]*)(,|$)/g).map(x=>x.replace(/,$/,"").replace(/^"|"$/g,""));
    const id=c[0];for(let d=1;d<=days;d++){if(c[1+d]!==undefined&&c[1+d]!=="")(data[id]=data[id]||{})[d]=String(num(c[1+d])-((DM[id]||{})[d]||0))}const e=c[days+3],oo=c[days+5];if(e)(data[id]=data[id]||{}).e=e;if(oo)(data[id]=data[id]||{}).o=oo});
   save();build()};r.readAsText(f);e.target.value=""};
-const n=new Date();mEl.value=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0");$("#vl").innerHTML=V.map(v=>`<option value="${v.id}">${v.plate}</option>`).join("");const td=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");$("#ef").value=td;$("#et").value=td;const show=p=>{document.querySelectorAll("[data-p]").forEach(e=>e.classList.toggle("hide",e.dataset.p!==p));$("#tin").classList.toggle("on",p==="in");$("#tmon").classList.toggle("on",p==="mon")};$("#tin").onclick=()=>show("in");$("#tmon").onclick=()=>show("mon");renderEN();fillWeeks();build();show("in");let st="dpwh";try{st=localStorage.getItem("fuel:theme")||"dpwh"}catch(e){}const setTheme=t=>{if(t==="auto")document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("fuel:theme",t)}catch(e){}};$("#theme").value=st;setTheme(st);$("#theme").onchange=e=>setTheme(e.target.value);
+const n=new Date();mEl.value=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0");$("#vl").innerHTML=V.map(v=>`<option value="${v.id}">${v.plate}</option>`).join("");const td=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");$("#ef").value=td;$("#et").value=td;const show=p=>{document.querySelectorAll("[data-p]").forEach(e=>e.classList.toggle("hide",e.dataset.p!==p));$("#tin").classList.toggle("on",p==="in");$("#tmon").classList.toggle("on",p==="mon")};$("#tin").onclick=()=>show("in");$("#tmon").onclick=()=>show("mon");renderEN();fillWeeks();build();show("in");let st="dpwh";try{st=localStorage.getItem("fuel:theme")||"dpwh"}catch(e){}const setTheme=t=>{if(t==="auto")document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("fuel:theme",t)}catch(e){}};$("#theme").value=st;setTheme(st);$("#theme").onchange=e=>setTheme(e.target.value);initDB();
 </script></body></html>
