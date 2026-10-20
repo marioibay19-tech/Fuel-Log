@@ -36,5 +36,6 @@ The site is at `https://<username>.github.io/<repository>/`.
 ## Notes
 - If the apiKey is blank, data is saved only in each user's own browser.
 - With open rules, anyone with the site link can read and change the data.
+- Background: dotted pattern (default), plain, or your own image (header dropdown; saved per browser).
 - Themes: DPWH (default, blue header + orange accent, Public Sans), Auto, Light, Dark, Forest, Amber, Ocean.
 - Vehicle list: edit the `RAW` string near the top of the script (`PropertyNo Plate` per line).
