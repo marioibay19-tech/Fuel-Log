@@ -17,9 +17,19 @@ If the header shows "Shared: connection problem", re-copy the apiKey from Fireba
 Repository Settings -> Pages -> Deploy from a branch -> `main` / root.
 The site is at `https://<username>.github.io/<repository>/`.
 
+## Password
+The page opens with a password screen. The starting password is `DPWH-Fuel-2026` - change it right away in
+Settings -> Change password. The new password is stored in the shared database, so it applies to everyone.
+This is a light lock to keep casual visitors out. It is not strong security: the data itself is protected only by
+the Firestore rules, and anyone who can read the page code could bypass the screen.
+
 ## Pages
 - **Input**: add fuel by date range, and enter the weekly odometer readings (one box per vehicle for the chosen Monday). Liters are split equally across the days (inclusive);
   overlapping entries add up.
+- **Checks**: missing Monday readings, odometer going down, unusual km/L, distance with no fuel, duplicate fuel entries.
+- **Maintenance**: latest odometer vs last PM odometer + PM interval -> overdue / due soon / OK; CSV export and a link to the PM/CM monitoring site.
+- **Reports**: monthly summary per vehicle with charts; print / save as PDF and CSV.
+- **Settings**: add, edit, deactivate vehicles; PM and km/L thresholds; change password.
 - **Monitoring**: per-vehicle table with a fuel row and an odometer row per day (type the Monday readings),
   weekly (Mon-Sun) or whole month, search, CSV export/import.
 
@@ -28,7 +38,7 @@ The site is at `https://<username>.github.io/<repository>/`.
 - Odometer: enter the actual reading every Monday (any day works) in the Odometer row.
   Between two readings, the distance (difference of the readings) is shared out by ratio and proportion
   of the fuel used each day. km/L is not used in the formula.
-- Month km, km/L (distance / fuel) and First/Last odo are computed from those readings.
+- Month km and First/Last odo are computed from those readings.
 - Saturday/Sunday cells with no fuel (and no typed reading) are left blank.
 - Days after the latest reading stay blank until the next reading is entered.
 - Readings in the neighbouring months are used, so weeks that cross a month end are computed.

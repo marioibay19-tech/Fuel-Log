@@ -30,6 +30,15 @@ td input:focus{outline:2px solid var(--ac);outline-offset:-2px;background:var(--
 td.wk{background:var(--wk)}td.wk input{background:transparent}
 .tot{min-width:70px;font-weight:600;padding:4px 8px;background:var(--hd)}
 .hide{display:none!important}.tabs{display:flex;gap:6px;padding:4px 16px}.tabs button.on{background:var(--ac);border-color:var(--ac);color:#fff}td.od{padding:0}td.od input{color:var(--mut);font-style:italic}td.od input.ovr{color:var(--tx);font-style:normal;font-weight:600}tr.or>td{border-bottom:2px solid var(--bd)}th small{font-weight:400;color:var(--mut)}.card{margin:0 16px 10px;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 12px}.card summary{cursor:pointer;font-weight:600}.row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center}.el{border-collapse:collapse;margin-top:6px}.el th,.el td{border:1px solid var(--bd);padding:4px 8px;font-size:13px;position:static;background:transparent}#emsg{color:#d1242f;font-size:13px}.el td input{border:1px solid var(--bd);border-radius:6px;background:var(--card)}.mut{color:var(--mut)}
+#gate{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px}
+.gbox{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:22px;max-width:340px;width:100%;display:flex;flex-direction:column;gap:10px;box-shadow:0 4px 18px #0003}
+.gbox h2{margin:0}.gbox p{margin:0}
+.tabs{flex-wrap:wrap}header button{background:#ffffff26;color:#fff;border-color:#ffffff66}
+.tiles{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}.tile{border:1px solid var(--bd);border-radius:8px;padding:8px 14px;background:var(--bg)}.tile b{display:block;font-size:18px}
+.bad{color:#d1242f;font-weight:600}.warn{color:#c26a00;font-weight:600}.ok{color:#1a7f37;font-weight:600}
+.badge{display:inline-block;min-width:22px;text-align:center;border-radius:10px;padding:0 8px;color:#fff;background:#1a7f37;font-size:12px;margin-left:6px}.badge.n{background:#d1242f}
+.bar2{display:flex;align-items:center;gap:8px;margin:2px 0}.bar2 i{display:block;height:14px;background:var(--ac);border-radius:3px}
+@media print{header,.tabs,#gate,.nop,[data-p]:not(#prep){display:none!important}#prep{display:block!important}body{background:#fff!important}.card{box-shadow:none;border:0}}
 html[data-bg="pattern"] body{background-image:radial-gradient(circle at 1px 1px,color-mix(in srgb,var(--ac) 18%,transparent) 1px,transparent 0),linear-gradient(180deg,color-mix(in srgb,var(--ac) 10%,transparent),transparent 360px);background-size:22px 22px,100% 100%;background-attachment:fixed}
 html[data-bg="image"] body{background-image:linear-gradient(color-mix(in srgb,var(--bg) 78%,transparent),color-mix(in srgb,var(--bg) 78%,transparent)),var(--bgimg);background-size:cover;background-position:center;background-attachment:fixed}
 :root[data-theme="forest"]{--hb:#1e7a46;--bg:#f1f6f2;--card:#fff;--tx:#17231b;--mut:#5d7164;--bd:#cfdcd2;--ac:#1e7a46;--hd:#e1eee5;--wk:#eef5f0}
@@ -42,15 +51,16 @@ html[data-bg="image"] body{background-image:linear-gradient(color-mix(in srgb,va
 :root[data-theme="dpwh"] .tabs button.on,:root[data-theme="dpwh"] button.p{background:#f7931e;border-color:#f7931e;color:#fff}
 :root[data-theme="dpwh"] .tabs{margin-top:8px}
 </style></head><body>
-<header><div><h1>Vehicle Fuel Log</h1><p>Enter fuel on the Input tab and the actual odometer every Monday on the Monitoring tab. Daily odometer is computed by ratio and proportion of the fuel used.</p><p id="sync"></p><button id="mig" class="hide" style="margin-top:6px">Upload this browser's saved data to shared</button></div><select id="theme" title="Theme"><option value="dpwh">Theme: DPWH</option><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="forest">Forest</option><option value="amber">Amber</option><option value="ocean">Ocean</option></select><select id="bg" title="Background"><option value="pattern">Background: Pattern</option><option value="plain">Plain</option><option value="image">My image…</option></select><input type="file" id="bgfile" accept="image/*" class="hide"></header>
-<div class="tabs"><button id="tin">Input</button><button id="tmon">Monitoring</button></div>
+<div id="gate"><div class="gbox"><h2>Vehicle Fuel Log</h2><p class="mut" id="gmsg">Enter the password to continue.</p><input type="password" id="gpw" placeholder="Password" autocomplete="current-password"><button id="ggo" class="p">Unlock</button></div></div>
+<header><div><h1>Vehicle Fuel Log</h1><p>Enter fuel on the Input tab and the actual odometer every Monday on the Monitoring tab. Daily odometer is computed by ratio and proportion of the fuel used.</p><p id="sync"></p><button id="mig" class="hide" style="margin-top:6px">Upload this browser's saved data to shared</button></div><select id="theme" title="Theme"><option value="dpwh">Theme: DPWH</option><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="forest">Forest</option><option value="amber">Amber</option><option value="ocean">Ocean</option></select><select id="bg" title="Background"><option value="pattern">Background: Pattern</option><option value="plain">Plain</option><option value="image">My image…</option></select><input type="file" id="bgfile" accept="image/*" class="hide"><button id="lock" title="Lock the page">Lock</button></header>
+<div class="tabs"><button data-t="in">Input</button><button data-t="mon">Monitoring</button><button data-t="chk">Checks</button><button data-t="pm">Maintenance</button><button data-t="rep">Reports</button><button data-t="set">Settings</button></div>
 <div class="bar" data-p="mon">
 <input type="month" id="month"><select id="week"></select>
 <input type="search" id="q" placeholder="Search vehicle or plate…">
 <button id="exp" class="p">Export CSV</button>
 <button id="imp">Import CSV</button><input type="file" id="file" accept=".csv" class="hide">
 <button id="clr">Clear month</button>
-<span class="stat"><b id="gt">0</b> L · <b id="gk">0</b> km · <b id="ge">–</b> km/L</span>
+<span class="stat"><b id="gt">0</b> L · <b id="gk">0</b> km</span>
 </div>
 <details class="card" data-p="in" open><summary>Add fuel by date range</summary>
 <div class="row"><input id="ev" list="vl" placeholder="Vehicle no. or plate"><datalist id="vl"></datalist><input type="number" id="eliters" placeholder="Liters" step="any" min="0" style="width:100px"><label class="mut">From <input type="date" id="ef"></label><label class="mut">To <input type="date" id="et"></label><button id="ea" class="p">Add fuel</button><span id="emsg"></span></div>
@@ -61,6 +71,29 @@ html[data-bg="image"] body{background-image:linear-gradient(color-mix(in srgb,va
 <p class="mut" style="margin:0 0 6px">Type the actual odometer for the date shown (usually Monday). It saves as you type. Clear a box to remove a reading.</p>
 <div id="odlist" style="overflow:auto;max-height:440px"></div></details>
 <div class="wrap" data-p="mon"><table id="t"><thead></thead><tbody></tbody><tfoot></tfoot></table></div>
+<div data-p="chk" class="hide"><div class="card"><b>Data checks</b> <span class="mut" id="chkm"></span>
+<div class="row"><label class="mut">Missing readings for <input type="date" id="chkd"></label><button id="chkgo" class="p">Run checks</button></div>
+<div id="chkout"></div></div></div>
+<div data-p="pm" class="hide"><div class="card"><b>Preventive maintenance (PM) due</b>
+<p class="mut" style="margin:4px 0 6px">Uses each vehicle's latest odometer reading. Enter the odometer of its last PM and (optionally) its own PM interval. Defaults are in Settings.</p>
+<div class="row"><button id="pmcsv">Export CSV</button><button id="pmlink" class="hide">Open PM/CM Monitoring</button><span id="pmsum" class="mut"></span></div>
+<div id="pmout" style="overflow:auto"></div></div></div>
+<div data-p="rep" class="hide" id="prep"><div class="card"><b id="reptitle">Monthly report</b>
+<div class="row nop"><input type="month" id="rm"><button id="repprint" class="p">Print / Save as PDF</button><button id="repcsv">Export CSV</button></div>
+<div id="repout"></div></div></div>
+<div data-p="set" class="hide">
+<div class="card"><b>Vehicles</b>
+<div class="row"><input id="nvid" placeholder="Property no. (e.g. H1-1234)"><input id="nvpl" placeholder="Plate no."><button id="nvadd" class="p">Add vehicle</button><span id="nvmsg" class="mut"></span></div>
+<div class="row"><input type="search" id="vq" placeholder="Search vehicle or plate…"></div>
+<p class="mut" style="margin:0 0 6px">Untick Active to hide a vehicle from the forms and tables (its history is kept).</p>
+<div id="vlist" style="overflow:auto;max-height:420px"></div></div>
+<div class="card"><b>Maintenance and checks</b>
+<div class="row"><label class="mut">PM every (km) <input type="number" id="cfgpm" style="width:100px"></label><label class="mut">Warn when within (km) <input type="number" id="cfgwarn" style="width:100px"></label></div>
+<div class="row"><label class="mut">Normal km/L from <input type="number" step="any" id="cfgmin" style="width:80px"></label><label class="mut">to <input type="number" step="any" id="cfgmax" style="width:80px"></label></div>
+<div class="row"><label class="mut">PM/CM Monitoring link <input id="cfgurl" placeholder="https://…" style="width:320px"></label></div></div>
+<div class="card"><b>Change password</b>
+<div class="row"><input type="password" id="pwcur" placeholder="Current password"><input type="password" id="pwnew" placeholder="New password"><input type="password" id="pwcon" placeholder="Repeat new password"><button id="pwgo" class="p">Change</button><span id="pwmsg" class="mut"></span></div></div>
+</div>
 <script>
 const RAW=`F5-334 N/A
 F5-372 N/A
@@ -189,7 +222,15 @@ K3-19 N/A
 K4-33 N/A
 T1-106 N/A
 T1-107 N/A`;
-const V=RAW.split("\n").map(l=>{const s=l.trim().split(/\s+/);return{id:s[0],plate:s.slice(1).join(" ")}});
+const BASE=RAW.split("\n").map(l=>{const s=l.trim().split(/\s+/);return{id:s[0],plate:s.slice(1).join(" ")}});
+let V=BASE.slice(),ALLV=BASE.slice();
+const META={vehicles:{},pm:{},settings:{}};
+["vehicles","pm","settings"].forEach(c=>{try{META[c]=JSON.parse(localStorage.getItem("fuel:meta:"+c))||{}}catch(e){}});
+const vk=id=>String(id).replace(/[^A-Za-z0-9_-]/g,"-");
+function rebuildV(){const ids=new Set(),L=BASE.map(b=>{ids.add(b.id);const x=META.vehicles[vk(b.id)];return x?{id:b.id,plate:x.plate!==undefined?x.plate:b.plate,off:!!x.off}:{id:b.id,plate:b.plate,off:false}});
+ Object.keys(META.vehicles).forEach(k=>{const x=META.vehicles[k];if(x&&x.custom&&!ids.has(x.id))L.push({id:x.id,plate:x.plate||"N/A",off:!!x.off,custom:true})});
+ ALLV=L;V=L.filter(x=>!x.off)}
+rebuildV();
 const $=s=>document.querySelector(s),mEl=$("#month");
 let data={},days=30,d0=1,d1=30,DM={},EN=[];
 const ud=s=>{const p=s.split("-").map(Number);return Date.UTC(p[0],p[1]-1,p[2])};
@@ -255,11 +296,12 @@ $("#mig").onclick=()=>{for(const k of localKeys()){try{const v=JSON.parse(localS
 async function initDB(){
  try{if(window.claude&&window.claude.use)DB=await window.claude.use("db");else if(FIREBASE.apiKey)DB=fsAdapter(FIREBASE)}catch(e){DB=null}
  if(!DB){setSync("Local only: saved in this browser");return}
- setSync("Shared: connecting…");
+ setSync("Shared: connecting…");sReady=false;setTimeout(()=>{sReady=true},6000);
  try{const u=await window.claude.use("user");const w=u&&u.can?await u.can("data.write"):null;if(w===false)setSync("Shared: view-only (you can read but not save)")}catch(e){}
  DB.collection("logs").onSnapshot(s=>{ALL={};s.docs.forEach(d=>{ALL[d.id]=d.data()});
   if(first){first=false;lm="";build();if($("#sync").textContent.indexOf("view-only")<0)setSync("Shared: live (everyone sees the same entries)");chkMig()}else refreshFromDB()},e=>setSync("Shared: connection problem ("+((e&&e.code)||"error")+")"));
- DB.collection("entries").onSnapshot(s=>{EN=s.docs.map(d=>Object.assign({k:d.id},d.data())).sort((a,b)=>a.f<b.f?-1:a.f>b.f?1:0);renderEN();totals()},()=>{})}
+ DB.collection("entries").onSnapshot(s=>{EN=s.docs.map(d=>Object.assign({k:d.id},d.data())).sort((a,b)=>a.f<b.f?-1:a.f>b.f?1:0);renderEN();totals()},()=>{});
+ ["vehicles","pm","settings"].forEach(c=>DB.collection(c).onSnapshot(s=>{META[c]={};s.docs.forEach(d=>{META[c][d.id]=d.data()});if(c==="settings"){sReady=true;try{localStorage.setItem("fuel:authh",authHash())}catch(e){}}afterMeta(c)},()=>{}))}
 const num=x=>{const n=parseFloat(x);return isNaN(n)?0:n};
 const fmt=n=>Math.round(n*100)/100;
 function fillWeeks(){const [y,m]=mEl.value.split("-").map(Number),n=new Date(y,m,0).getDate(),W=$("#week"),rs=[];let s=1;
@@ -271,16 +313,16 @@ function build(){
  const pre="";const [y,m]=mEl.value.split("-").map(Number);days=new Date(y,m,0).getDate();load();const rv=$("#week").value;if(rv==="0"){d0=1;d1=days}else{const p=rv.split("-").map(Number);d0=p[0];d1=p[1]}
  let h='<tr><th class="c1">Vehicle</th><th class="c2">Plate</th><th class="c3"></th>',f='<tr><td class="c1">Total</td><td class="c2"></td><td class="c3">Fuel (L)</td>';
  for(let d=d0;d<=d1;d++){h+=`<th>${d}<br><small>${"Sun Mon Tue Wed Thu Fri Sat".split(" ")[new Date(y,m-1,d).getDay()]}</small></th>`;f+=`<td id="ct${d}">0</td>`}
- h+='<th>Week L</th><th>Month L</th><th>Month km</th><th>km/L</th><th>First odo</th><th>Last odo</th></tr>';f+='<td id="wt2">0</td><td id="gt2">0</td><td id="gk2">0</td><td id="ge2"></td><td></td><td></td></tr>';
+ h+='<th>Week L</th><th>Month L</th><th>Month km</th><th>First odo</th><th>Last odo</th></tr>';f+='<td id="wt2">0</td><td id="gt2">0</td><td id="gk2">0</td><td></td><td></td></tr>';
  $("#t thead").innerHTML=h;$("#t tfoot").innerHTML=f;
  let b="";
  V.forEach((v,i)=>{let ob="";const sk=(v.id+" "+v.plate).toLowerCase();b+=`<tr data-i="${i}" data-s="${sk}"><td class="c1" rowspan="2">${v.id}</td><td class="c2" rowspan="2">${v.plate}</td><td class="c3">Fuel (L)</td>`;
   for(let d=d0;d<=d1;d++){const w=[0,6].includes(new Date(y,m-1,d).getDay());const val=(data[v.id]||{})[pre+d];
    b+=`<td class="${w?"wk":""}"><input type="number" step="any" min="0" inputmode="decimal" id="f${i}_${d}" data-v="${v.id}" data-d="${pre+d}" value=""></td>`;ob+=`<td class="${w?"wk":""} od${new Date(y,m-1,d).getDay()===1?" mon":""}"><input type="number" step="any" min="0" inputmode="decimal" class="odo" id="o${i}_${d}" data-v="${v.id}" data-d="o${d}" value="${(data[v.id]||{})["o"+d]??""}"></td>`}
-  b+=`<td class="tot" rowspan="2" id="wk${i}"></td><td class="tot" rowspan="2" id="rt${i}"></td><td class="tot" rowspan="2" id="rk${i}"></td><td class="tot" rowspan="2" id="re${i}"></td><td class="tot" rowspan="2" id="rf${i}"></td><td class="tot" rowspan="2" id="rl${i}"></td></tr><tr class="or" data-s="${sk}"><td class="c3">Odometer</td>${ob}</tr>`});
+  b+=`<td class="tot" rowspan="2" id="wk${i}"></td><td class="tot" rowspan="2" id="rt${i}"></td><td class="tot" rowspan="2" id="rk${i}"></td><td class="tot" rowspan="2" id="rf${i}"></td><td class="tot" rowspan="2" id="rl${i}"></td></tr><tr class="or" data-s="${sk}"><td class="c3">Odometer</td>${ob}</tr>`});
  $("#t tbody").innerHTML=b;totals();filter();
 }
-const LAST={};
+const LAST={};let WIN=null;
 const ymd=dt=>dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");
 const lastMon=()=>{const t=new Date();t.setDate(t.getDate()-((t.getDay()+6)%7));return ymd(t)};
 const odSrc=ds=>ds.slice(0,7)===mEl.value?data:mdat(ds.slice(0,7));
@@ -316,7 +358,7 @@ function totals(){
  DM=distMap();
  const [y,m]=mEl.value.split("-").map(Number);
  const mm=[-1,0,1].map(dl=>{const dt=new Date(y,m-1+dl,1),yy=dt.getFullYear(),mo=dt.getMonth()+1;return{y:yy,m:mo,n:new Date(yy,mo,0).getDate(),dat:dl===0?data:mdat(yy+"-"+String(mo).padStart(2,"0"))}});
- const off=mm[0].n,ENV={};
+ const off=mm[0].n,ENV={};WIN={mm,off};
  EN.forEach(x=>{const f=ud(x.f),t=ud(x.t);(ENV[x.v]=ENV[x.v]||[]).push({f,t,per:x.l/((t-f)/864e5+1)})});
  let g=0,gk=0,gke=0,gl=0,wg=0;const ct=Array(days+1).fill(0);
  V.forEach((v,i)=>{const f=[],a=[];
@@ -330,10 +372,10 @@ function totals(){
   if(fi>0&&la>fi){dist=od[off+la-1]-od[off+fi-1];let fu=0;for(let d=fi;d<la;d++)fu+=f[off+d-1];gk+=dist;if(fu>0){eff=dist/fu;gke+=dist;gl+=fu}}
   g+=l;wg+=wl;
   const set=(p,t)=>{const e=$("#"+p+i);if(e)e.textContent=t};
-  set("wk",wl?fmt(wl):"");set("rt",l?fmt(l):"");set("rk",dist!==null?fmt(dist):"");set("re",eff!==null?fmt(eff):"");set("rf",fi>0?fmt(od[off+fi-1]):"");set("rl",la>0?fmt(od[off+la-1]):"");
-  LAST[v.id]={f:f.slice(off,off+days),od:sh,l,dist,eff,fo:fi>0?fmt(od[off+fi-1]):"",lo:la>0?fmt(od[off+la-1]):""}});
+  set("wk",wl?fmt(wl):"");set("rt",l?fmt(l):"");set("rk",dist!==null?fmt(dist):"");set("rf",fi>0?fmt(od[off+fi-1]):"");set("rl",la>0?fmt(od[off+la-1]):"");
+  LAST[v.id]={F:f,A:a,f:f.slice(off,off+days),od:sh,l,dist,eff,fo:fi>0?fmt(od[off+fi-1]):"",lo:la>0?fmt(od[off+la-1]):""}});
  for(let d=1;d<=days;d++){const x=$("#ct"+d);if(x)x.textContent=ct[d]?fmt(ct[d]):""}
- const fe=gl?fmt(gke/gl):"–";$("#gt2").textContent=fmt(g);$("#wt2").textContent=fmt(wg);$("#gt").textContent=fmt(g);$("#gk2").textContent=fmt(gk);$("#gk").textContent=fmt(gk);$("#ge").textContent=fe;$("#ge2").textContent=gl?fe:"";syncOd();
+ const fe=gl?fmt(gke/gl):"–";$("#gt2").textContent=fmt(g);$("#wt2").textContent=fmt(wg);$("#gt").textContent=fmt(g);$("#gk2").textContent=fmt(gk);$("#gk").textContent=fmt(gk);syncOd();
 }
 function filter(){const q=$("#q").value.trim().toLowerCase();document.querySelectorAll("#t tbody tr").forEach(r=>r.classList.toggle("hide",q&&!r.dataset.s.includes(q)))}
 $("#t tbody").addEventListener("input",e=>{const t=e.target;if(!t.dataset.v)return;
@@ -344,10 +386,10 @@ $("#q").addEventListener("input",filter);$("#t tbody").addEventListener("change"
 mEl.addEventListener("change",()=>{fillWeeks();build()});$("#week").addEventListener("change",build);
 $("#clr").onclick=()=>{if(confirm("Clear all fuel entries for "+mEl.value+"?")){data={};save();build()}};
 $("#exp").onclick=()=>{
- let c="Vehicle,Plate,Row,"+Array.from({length:days},(_,i)=>i+1).join(",")+",Total L,Month km,km/L,First odo,Last odo\n";
+ let c="Vehicle,Plate,Row,"+Array.from({length:days},(_,i)=>i+1).join(",")+",Total L,Month km,First odo,Last odo\n";
  V.forEach(v=>{const L=LAST[v.id];if(!L)return;
-  c+=`"${v.id}","${v.plate}",Fuel (L),${L.f.map(x=>Math.abs(x)>1e-9?fmt(x):"").join(",")},${fmt(L.l)},,,,\n`;
-  c+=`"${v.id}","${v.plate}",Odometer,${L.od.map(x=>x===null?"":fmt(x)).join(",")},,${L.dist!==null?fmt(L.dist):""},${L.eff!==null?fmt(L.eff):""},${L.fo},${L.lo}\n`});
+  c+=`"${v.id}","${v.plate}",Fuel (L),${L.f.map(x=>Math.abs(x)>1e-9?fmt(x):"").join(",")},${fmt(L.l)},,,\n`;
+  c+=`"${v.id}","${v.plate}",Odometer,${L.od.map(x=>x===null?"":fmt(x)).join(",")},,${L.dist!==null?fmt(L.dist):""},${L.fo},${L.lo}\n`});
  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([c],{type:"text/csv"}));a.download="fuel-"+mEl.value+".csv";a.click()};
 $("#imp").onclick=()=>$("#file").click();
 $("#file").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
@@ -355,7 +397,143 @@ $("#file").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileR
   L.forEach(l=>{const c=l.match(/("([^"]*)"|[^,]*)(,|$)/g).map(x=>x.replace(/,$/,"").replace(/^"|"$/g,""));
    if(c[2]!=="Fuel (L)")return;const id=c[0];for(let d=1;d<=days;d++){if(c[2+d]!==undefined&&c[2+d]!=="")(data[id]=data[id]||{})[d]=String(num(c[2+d])-((DM[id]||{})[d]||0))}});
   save();build()};r.readAsText(f);e.target.value=""};
-const n=new Date();mEl.value=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0");$("#vl").innerHTML=V.map(v=>`<option value="${v.id}">${v.plate}</option>`).join("");const td=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");$("#ef").value=td;$("#et").value=td;const show=p=>{document.querySelectorAll("[data-p]").forEach(e=>e.classList.toggle("hide",e.dataset.p!==p));$("#tin").classList.toggle("on",p==="in");$("#tmon").classList.toggle("on",p==="mon")};$("#tin").onclick=()=>show("in");$("#tmon").onclick=()=>show("mon");renderEN();fillWeeks();build();show("in");let st="dpwh";try{st=localStorage.getItem("fuel:theme")||"dpwh"}catch(e){}const setTheme=t=>{if(t==="auto")document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("fuel:theme",t)}catch(e){}};$("#theme").value=st;setTheme(st);$("#theme").onchange=e=>setTheme(e.target.value);
+const n=new Date();mEl.value=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0");$("#vl").innerHTML=V.map(v=>`<option value="${v.id}">${v.plate}</option>`).join("");const td=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");$("#ef").value=td;$("#et").value=td;const esc=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const cfg=()=>Object.assign({pmDef:5000,pmWarn:500,minEff:1.5,maxEff:25,pmUrl:""},META.settings.cfg||{});
+const dl=(name,text)=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:"text/csv"}));a.download=name;a.click()};
+const fillVL=()=>{$("#vl").innerHTML=V.map(v=>`<option value="${esc(v.id)}">${esc(v.plate)}</option>`).join("")};
+let TAB="in",sReady=true;
+function show(p){TAB=p;document.querySelectorAll("[data-p]").forEach(e=>e.classList.toggle("hide",e.dataset.p!==p));
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===p));
+ if(p==="chk")renderChk();if(p==="pm")renderPM();if(p==="rep"){$("#rm").value=mEl.value;renderRep()}if(p==="set")renderSet()}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>show(b.dataset.t));
+/* ---- shared settings storage (vehicles, PM records, config, password) ---- */
+function metaSave(c,id,obj){
+ if(obj===null)delete META[c][id];else META[c][id]=obj;
+ if(DB){const r=DB.doc(c+"/"+id);(obj===null?r.delete():r.set(obj)).catch(e=>setSync("Could not save ("+((e&&e.code)||"error")+")"))}
+ else{try{localStorage.setItem("fuel:meta:"+c,JSON.stringify(META[c]))}catch(e){}}
+ afterMeta(c,true)}
+function afterMeta(c,local){
+ if(c==="vehicles"){rebuildV();fillVL();build();renderOd();if(TAB==="set"&&!local)renderSet();if(TAB==="pm"&&!local)renderPM()}
+ if(c==="pm"&&TAB==="pm"){if(local)updPM();else renderPM()}
+ if(c==="settings"){tryAuto();if(TAB==="set"&&!local)renderSet();if(TAB==="pm")renderPM();if(TAB==="chk")renderChk()}}
+/* ---- password gate (a light lock, not strong security) ---- */
+const SALT="dpwh-fuel:",DEFH="1296bc14e9e16e6cac6c65f132bc8824d4ac48d2ed1d8fd29bdb116a2daa6bea";
+const authHash=()=>(META.settings.auth&&META.settings.auth.h)||(()=>{try{return localStorage.getItem("fuel:authh")}catch(e){return null}})()||DEFH;
+const sha=async t=>{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(SALT+t));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("")};
+const unlock=()=>$("#gate").classList.add("hide");
+function tryAuto(){try{if(sessionStorage.getItem("fuel:ok")===authHash())unlock()}catch(e){}}
+async function login(){
+ try{await new Promise(r=>{const w=()=>sReady?r():setTimeout(w,150);w()});
+  const h=await sha($("#gpw").value);
+  if(h===authHash()){try{sessionStorage.setItem("fuel:ok",h)}catch(e){}$("#gpw").value="";$("#gmsg").textContent="Enter the password to continue.";unlock()}
+  else{$("#gmsg").textContent="Wrong password.";$("#gpw").select()}}
+ catch(e){$("#gmsg").textContent="The password needs a secure (https) page."}}
+$("#ggo").onclick=login;$("#gpw").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+$("#lock").onclick=()=>{try{sessionStorage.removeItem("fuel:ok")}catch(e){}$("#gate").classList.remove("hide");$("#gpw").focus()};
+$("#pwgo").onclick=async()=>{const M=$("#pwmsg");
+ try{const cur=await sha($("#pwcur").value),nw=$("#pwnew").value;
+  if(cur!==authHash()){M.textContent="Current password is wrong.";return}
+  if(nw.length<6){M.textContent="New password must be at least 6 characters.";return}
+  if(nw!==$("#pwcon").value){M.textContent="The new passwords do not match.";return}
+  const h=await sha(nw);metaSave("settings","auth",{h});try{sessionStorage.setItem("fuel:ok",h);localStorage.setItem("fuel:authh",h)}catch(e){}
+  M.textContent="Password changed.";["pwcur","pwnew","pwcon"].forEach(i=>$("#"+i).value="")}
+ catch(e){M.textContent="Could not change the password (needs https)."}};
+tryAuto();
+/* ---- Settings tab: vehicles, thresholds ---- */
+function renderSet(){
+ const q=($("#vq").value||"").trim().toLowerCase();
+ let h='<table class="el"><tr><th>Vehicle</th><th>Plate</th><th>Active</th><th></th></tr>';
+ ALLV.forEach(v=>{if(q&&!(v.id+" "+v.plate).toLowerCase().includes(q))return;
+  h+=`<tr class="${v.off?"mut":""}"><td>${esc(v.id)}</td><td><input class="vpl" data-id="${esc(v.id)}" value="${esc(v.plate)}" style="width:170px"></td><td><input type="checkbox" class="vac" data-id="${esc(v.id)}" ${v.off?"":"checked"}></td><td class="mut">${v.custom?"added":"built-in"}</td></tr>`});
+ $("#vlist").innerHTML=h+"</table>";
+ const c=cfg();[["cfgpm",c.pmDef],["cfgwarn",c.pmWarn],["cfgmin",c.minEff],["cfgmax",c.maxEff],["cfgurl",c.pmUrl]].forEach(([i,v])=>{const e=$("#"+i);if(document.activeElement!==e)e.value=v})}
+$("#vq").addEventListener("input",renderSet);
+$("#vlist").addEventListener("change",e=>{const t=e.target,id=t.dataset.id;if(!id)return;const v=ALLV.find(x=>x.id===id);if(!v)return;
+ const rec=Object.assign({id,custom:!!v.custom},META.vehicles[vk(id)]||{});
+ if(t.classList.contains("vpl"))rec.plate=t.value.trim()||"N/A";else{rec.off=!t.checked;t.closest("tr").classList.toggle("mut",rec.off)}
+ metaSave("vehicles",vk(id),rec)});
+$("#nvadd").onclick=()=>{const id=$("#nvid").value.trim(),pl=$("#nvpl").value.trim()||"N/A",M=$("#nvmsg");
+ if(!id){M.textContent="Enter the property no.";return}
+ if(ALLV.some(v=>v.id.toLowerCase()===id.toLowerCase())){M.textContent="That vehicle already exists (it may be inactive - see the list).";return}
+ metaSave("vehicles",vk(id),{id,plate:pl,custom:true,off:false});$("#nvid").value="";$("#nvpl").value="";M.textContent="Added."};
+["cfgpm","cfgwarn","cfgmin","cfgmax","cfgurl"].forEach(i=>$("#"+i).addEventListener("change",()=>{
+ metaSave("settings","cfg",{pmDef:num($("#cfgpm").value)||5000,pmWarn:num($("#cfgwarn").value)||500,minEff:num($("#cfgmin").value)||1.5,maxEff:num($("#cfgmax").value)||25,pmUrl:$("#cfgurl").value.trim()})}));
+/* ---- Maintenance tab ---- */
+function latestMap(){const M={},add=(vid,m,o)=>{Object.keys(o||{}).forEach(k=>{if(/^o\d+$/.test(k)&&o[k]!==""){const d=m+"-"+k.slice(1).padStart(2,"0");if(!M[vid]||d>M[vid].d)M[vid]={d,v:num(o[k])}}})};
+ if(DB)Object.keys(ALL).forEach(id=>{const x=ALL[id];add(x.v,x.m,x.d)});
+ else{try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^fuel:\d{4}-\d{2}$/.test(k)){const o=JSON.parse(localStorage.getItem(k))||{};Object.keys(o).forEach(v=>add(v,k.slice(5),o[v]))}}}catch(e){}}
+ Object.keys(data).forEach(v=>add(v,mEl.value,data[v]));return M}
+let PMROWS=[];
+function pmCalc(v,L,c){const p=META.pm[vk(v.id)]||{},lt=L[v.id],intv=num(p.i)||c.pmDef,last=p.l!==undefined&&p.l!==""?num(p.l):null;
+ let next=null,rem=null,st="Set last PM odometer";
+ if(last!==null){next=last+intv;if(lt){rem=next-lt.v;st=rem<0?"Overdue":rem<=c.pmWarn?"Due soon":"OK"}else st="No odometer reading"}
+ return{v,p,lt,intv,last,next,rem,st}}
+function sumPM(){const n=k=>PMROWS.filter(r=>r.st===k).length;$("#pmsum").innerHTML=`<span class="bad">${n("Overdue")} overdue</span> · <span class="warn">${n("Due soon")} due soon</span> · <span class="ok">${n("OK")} OK</span>`}
+function updPM(){const c=cfg(),L=latestMap();document.querySelectorAll("#pmout tr[data-id]").forEach(tr=>{const v=V.find(x=>x.id===tr.dataset.id);if(!v)return;const r=pmCalc(v,L,c),i=PMROWS.findIndex(x=>x.v.id===v.id);if(i>=0)PMROWS[i]=r;
+ tr.querySelector(".pmn").textContent=r.next!==null?fmt(r.next):"";tr.querySelector(".pmr").textContent=r.rem!==null?fmt(r.rem):"";
+ const s=tr.querySelector(".pms");s.textContent=r.st;s.className="pms "+(r.st==="Overdue"?"bad":r.st==="Due soon"?"warn":r.st==="OK"?"ok":"mut")});sumPM()}
+function renderPM(){
+ const c=cfg(),L=latestMap(),rank={"Overdue":0,"Due soon":1,"OK":2};
+ PMROWS=V.map(v=>pmCalc(v,L,c));
+ PMROWS.sort((a,b)=>(rank[a.st]??3)-(rank[b.st]??3)||(a.rem??1e12)-(b.rem??1e12));
+ sumPM();
+ $("#pmlink").classList.toggle("hide",!c.pmUrl);
+ let h='<table class="el"><tr><th>Vehicle</th><th>Plate</th><th>Latest odometer</th><th>PM every (km)</th><th>Last PM odometer</th><th>Next PM at</th><th>Remaining (km)</th><th>Status</th></tr>';
+ PMROWS.forEach(r=>{const cl=r.st==="Overdue"?"bad":r.st==="Due soon"?"warn":r.st==="OK"?"ok":"mut";
+  h+=`<tr data-id="${esc(r.v.id)}"><td>${esc(r.v.id)}</td><td>${esc(r.v.plate)}</td><td>${r.lt?fmt(r.lt.v)+' <span class="mut">('+r.lt.d+')</span>':""}</td><td><input class="pmi" data-id="${esc(r.v.id)}" type="number" min="0" placeholder="${c.pmDef}" value="${esc(r.p.i??"")}" style="width:90px"></td><td><input class="pml" data-id="${esc(r.v.id)}" type="number" min="0" value="${esc(r.p.l??"")}" style="width:110px"></td><td class="pmn">${r.next!==null?fmt(r.next):""}</td><td class="pmr">${r.rem!==null?fmt(r.rem):""}</td><td class="pms ${cl}">${r.st}</td></tr>`});
+ $("#pmout").innerHTML=h+"</table>"}
+$("#pmout").addEventListener("change",e=>{const t=e.target,id=t.dataset.id;if(!id)return;const k=vk(id),p=Object.assign({id},META.pm[k]||{});
+ if(t.classList.contains("pmi"))p.i=t.value.trim();else p.l=t.value.trim();metaSave("pm",k,p)});
+$("#pmcsv").onclick=()=>{let c="Vehicle,Plate,Latest odometer,Latest reading date,PM every (km),Last PM odometer,Next PM at,Remaining (km),Status\n";
+ PMROWS.forEach(r=>{c+=`"${r.v.id}","${r.v.plate}",${r.lt?r.lt.v:""},${r.lt?r.lt.d:""},${r.intv},${r.last??""},${r.next??""},${r.rem!==null?fmt(r.rem):""},${r.st}\n`});dl("pm-due.csv",c)};
+$("#pmlink").onclick=()=>{const u=cfg().pmUrl;if(u)window.open(u,"_blank")};
+/* ---- Checks tab ---- */
+function idxDate(i){let k=0;for(const M of WIN.mm){if(i<k+M.n)return M.y+"-"+String(M.m).padStart(2,"0")+"-"+String(i-k+1).padStart(2,"0");k+=M.n}return ""}
+function renderChk(){
+ const c=cfg(),d=$("#chkd").value||lastMon();if(!$("#chkd").value)$("#chkd").value=d;
+ if(!WIN){$("#chkout").innerHTML="";return}
+ const mn=WIN.mm;$("#chkm").textContent="Readings and fuel from "+idxDate(0)+" to "+idxDate(WIN.mm.reduce((a,M)=>a+M.n,0)-1)+" (month shown in Monitoring ± 1 month)";
+ const src=odSrc(d),k="o"+(+d.slice(8)),miss=V.filter(v=>{const r=(src[v.id]||{})[k];return r===undefined||r===""});
+ const dec=[],nof=[],eff=[];
+ V.forEach(v=>{const L=LAST[v.id];if(!L)return;const A=L.A,F=L.F;let pv=-1;
+  for(let i=0;i<A.length;i++){if(A[i]===null)continue;
+   if(pv>=0){const R=A[i]-A[pv];let fu=0;for(let j=pv;j<i;j++)fu+=F[j];const row={v,d1:idxDate(pv),d2:idxDate(i),r1:A[pv],r2:A[i],R,fu};
+    if(R<0)dec.push(row);else if(R>0&&fu<1e-9)nof.push(row);else if(fu>0){const e=R/fu;if(e<c.minEff||e>c.maxEff){row.e=e;eff.push(row)}}}
+   pv=i}});
+ const dupM={};EN.forEach(x=>{const key=[x.v,x.l,x.f,x.t].join("|");(dupM[key]=dupM[key]||[]).push(x)});
+ const dups=Object.values(dupM).filter(a=>a.length>1);
+ const sec=(t,n,body,hint)=>`<h4 style="margin:14px 0 4px">${t}<span class="badge ${n?"n":""}">${n}</span></h4>`+(hint?`<p class="mut" style="margin:0 0 4px">${hint}</p>`:"")+(n?body:"");
+ const T=(heads,rows)=>'<div style="overflow:auto;max-height:300px"><table class="el"><tr>'+heads.map(x=>"<th>"+x+"</th>").join("")+"</tr>"+rows.map(r=>"<tr>"+r.map(x=>"<td>"+x+"</td>").join("")+"</tr>").join("")+"</table></div>";
+ const iv=r=>[esc(r.v.id),esc(r.v.plate),r.d1+" → "+r.d2,fmt(r.r1),fmt(r.r2),fmt(r.R),fmt(r.fu)];
+ const ih=["Vehicle","Plate","Between","Reading 1","Reading 2","Km","Liters"];
+ $("#chkout").innerHTML=
+  sec("No odometer reading on "+d,miss.length,T(["Vehicle","Plate"],miss.map(v=>[esc(v.id),esc(v.plate)])))+
+  sec("Odometer went down",dec.length,T(ih,dec.map(iv)),"A later reading is lower than an earlier one. Usually a typing mistake.")+
+  sec("km/L outside "+c.minEff+" to "+c.maxEff,eff.length,T(ih.concat(["km/L"]),eff.map(r=>iv(r).concat([fmt(r.e)]))),"Distance between two readings compared with the fuel used in that time.")+
+  sec("Distance but no fuel recorded",nof.length,T(ih,nof.map(iv)),"The odometer moved but no fuel is entered between the two readings.")+
+  sec("Possible duplicate fuel entries",dups.length,T(["Vehicle","Liters","From","To","Times"],dups.map(a=>[esc(a[0].v),a[0].l,a[0].f,a[0].t,a.length])))}
+$("#chkgo").onclick=renderChk;$("#chkd").addEventListener("change",renderChk);
+/* ---- Reports tab ---- */
+let REPROWS=[];
+function renderRep(){
+ const [y,m]=mEl.value.split("-").map(Number),name=new Date(y,m-1,1).toLocaleDateString("en",{month:"long",year:"numeric"});
+ $("#reptitle").textContent="Vehicle Fuel Log - Monthly Report - "+name;
+ REPROWS=V.map(v=>({v,L:LAST[v.id]})).filter(r=>r.L&&(r.L.l>1e-9||r.L.dist));
+ let tl=0,tk=0,ek=0,ef=0;REPROWS.forEach(r=>{tl+=r.L.l;if(r.L.dist!==null)tk+=r.L.dist;if(r.L.eff){ek+=r.L.dist;ef+=r.L.dist/r.L.eff}});
+ const top=REPROWS.slice().sort((a,b)=>b.L.l-a.L.l).slice(0,10),mx=top.length?top[0].L.l:1;
+ const low=REPROWS.filter(r=>r.L.eff).sort((a,b)=>a.L.eff-b.L.eff).slice(0,5);
+ let h=`<div class="tiles"><div class="tile">Fleet liters<b>${fmt(tl)}</b></div><div class="tile">Fleet km<b>${fmt(tk)}</b></div><div class="tile">Fleet km/L<b>${ef?fmt(ek/ef):"–"}</b></div><div class="tile">Vehicles with fuel<b>${REPROWS.filter(r=>r.L.l>1e-9).length}</b></div></div>`;
+ h+='<div style="display:flex;flex-wrap:wrap;gap:24px"><div><b>Most fuel used</b>'+top.map(r=>`<div class="bar2"><span style="width:90px">${esc(r.v.id)}</span><i style="width:${Math.max(2,r.L.l/mx*220)}px"></i><span>${fmt(r.L.l)}</span></div>`).join("")+'</div>';
+ h+='<div><b>Lowest km/L</b>'+(low.length?low.map(r=>`<div class="bar2"><span style="width:90px">${esc(r.v.id)}</span><span>${fmt(r.L.eff)} km/L</span></div>`).join(""):'<div class="mut">Needs odometer readings</div>')+'</div></div>';
+ h+='<div style="overflow:auto;margin-top:12px"><table class="el"><tr><th>Vehicle</th><th>Plate</th><th>Liters</th><th>Km</th><th>km/L</th><th>First odo</th><th>Last odo</th></tr>'+
+  REPROWS.map(r=>`<tr><td>${esc(r.v.id)}</td><td>${esc(r.v.plate)}</td><td>${fmt(r.L.l)}</td><td>${r.L.dist!==null?fmt(r.L.dist):""}</td><td>${r.L.eff?fmt(r.L.eff):""}</td><td>${r.L.fo}</td><td>${r.L.lo}</td></tr>`).join("")+
+  `<tr><th colspan="2">Total</th><th>${fmt(tl)}</th><th>${fmt(tk)}</th><th>${ef?fmt(ek/ef):""}</th><th></th><th></th></tr></table></div>`;
+ $("#repout").innerHTML=h}
+$("#rm").addEventListener("change",e=>{if(!e.target.value)return;mEl.value=e.target.value;mEl.dispatchEvent(new Event("change"));renderRep()});
+$("#repprint").onclick=()=>window.print();
+$("#repcsv").onclick=()=>{let c="Vehicle,Plate,Liters,Km,km/L,First odo,Last odo\n";REPROWS.forEach(r=>{c+=`"${r.v.id}","${r.v.plate}",${fmt(r.L.l)},${r.L.dist!==null?fmt(r.L.dist):""},${r.L.eff?fmt(r.L.eff):""},${r.L.fo},${r.L.lo}\n`});dl("report-"+mEl.value+".csv",c)};
+renderEN();fillWeeks();build();fillVL();show("in");
+let st="dpwh";try{st=localStorage.getItem("fuel:theme")||"dpwh"}catch(e){}const setTheme=t=>{if(t==="auto")document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("fuel:theme",t)}catch(e){}};$("#theme").value=st;setTheme(st);$("#theme").onchange=e=>setTheme(e.target.value);
 let bgm="pattern",bgi="";try{bgm=localStorage.getItem("fuel:bg")||"pattern";bgi=localStorage.getItem("fuel:bgimg")||""}catch(e){}
 const applyBg=(m,img)=>{const r=document.documentElement;if(m==="image"&&!img){m="pattern"}r.dataset.bg=m;if(img)r.style.setProperty("--bgimg",`url("${img}")`);$("#bg").value=m;bgm=m;try{localStorage.setItem("fuel:bg",m)}catch(e){}};
 applyBg(bgm,bgi);
