@@ -18,15 +18,20 @@ Repository Settings -> Pages -> Deploy from a branch -> `main` / root.
 The site is at `https://<username>.github.io/<repository>/`.
 
 ## Pages
-- **Input**: add fuel by date range. Liters are split equally across the days (inclusive);
+- **Input**: add fuel by date range, and enter the weekly odometer readings (one box per vehicle for the chosen Monday). Liters are split equally across the days (inclusive);
   overlapping entries add up.
-- **Monitoring**: per-vehicle table with a fuel row and computed odometer row per day,
+- **Monitoring**: per-vehicle table with a fuel row and an odometer row per day (type the Monday readings),
   weekly (Mon-Sun) or whole month, search, CSV export/import.
 
 ## How the numbers work
 - Daily fuel = date-range entries + anything typed in the grid
-- Distance = liters x km/L (km/L entered per vehicle)
-- Odometer = start odometer + cumulative distance; any day can be edited and later days continue from it
+- Odometer: enter the actual reading every Monday (any day works) in the Odometer row.
+  Between two readings, the distance (difference of the readings) is shared out by ratio and proportion
+  of the fuel used each day. km/L is not used in the formula.
+- Month km, km/L (distance / fuel) and First/Last odo are computed from those readings.
+- Saturday/Sunday cells with no fuel (and no typed reading) are left blank.
+- Days after the latest reading stay blank until the next reading is entered.
+- Readings in the neighbouring months are used, so weeks that cross a month end are computed.
 
 ## Notes
 - If the apiKey is blank, data is saved only in each user's own browser.

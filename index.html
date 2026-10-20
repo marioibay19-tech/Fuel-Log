@@ -29,7 +29,7 @@ td input{width:72px;border:0;border-radius:0;background:transparent;text-align:r
 td input:focus{outline:2px solid var(--ac);outline-offset:-2px;background:var(--card)}
 td.wk{background:var(--wk)}td.wk input{background:transparent}
 .tot{min-width:70px;font-weight:600;padding:4px 8px;background:var(--hd)}
-.hide{display:none!important}.tabs{display:flex;gap:6px;padding:4px 16px}.tabs button.on{background:var(--ac);border-color:var(--ac);color:#fff}td.od{padding:0}td.od input{color:var(--mut);font-style:italic}td.od input.ovr{color:var(--tx);font-style:normal;font-weight:600}tr.or>td{border-bottom:2px solid var(--bd)}th small{font-weight:400;color:var(--mut)}.card{margin:0 16px 10px;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 12px}.card summary{cursor:pointer;font-weight:600}.row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center}.el{border-collapse:collapse;margin-top:6px}.el th,.el td{border:1px solid var(--bd);padding:4px 8px;font-size:13px;position:static;background:transparent}#emsg{color:#d1242f;font-size:13px}.mut{color:var(--mut)}
+.hide{display:none!important}.tabs{display:flex;gap:6px;padding:4px 16px}.tabs button.on{background:var(--ac);border-color:var(--ac);color:#fff}td.od{padding:0}td.od.mon{outline:2px solid #f7931e88;outline-offset:-2px}td.od input{color:var(--mut);font-style:italic}td.od input.ovr{color:var(--tx);font-style:normal;font-weight:600}tr.or>td{border-bottom:2px solid var(--bd)}th small{font-weight:400;color:var(--mut)}.card{margin:0 16px 10px;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 12px}.card summary{cursor:pointer;font-weight:600}.row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center}.el{border-collapse:collapse;margin-top:6px}.el th,.el td{border:1px solid var(--bd);padding:4px 8px;font-size:13px;position:static;background:transparent}#emsg{color:#d1242f;font-size:13px}.el td input{border:1px solid var(--bd);border-radius:6px;background:var(--card)}.mut{color:var(--mut)}
 :root[data-theme="forest"]{--hb:#1e7a46;--bg:#f1f6f2;--card:#fff;--tx:#17231b;--mut:#5d7164;--bd:#cfdcd2;--ac:#1e7a46;--hd:#e1eee5;--wk:#eef5f0}
 :root[data-theme="amber"]{--hb:#b45f00;--bg:#faf6ee;--card:#fffdf8;--tx:#2a2112;--mut:#7a6b52;--bd:#e5d9bf;--ac:#b45f00;--hd:#f3e8cf;--wk:#f8f0de}
 :root[data-theme="ocean"]{--hb:#0b6e94;--bg:#eef5f9;--card:#fff;--tx:#10222e;--mut:#5a7384;--bd:#cbdbe6;--ac:#0b7ea8;--hd:#dcebf3;--wk:#e9f2f7}
@@ -40,7 +40,7 @@ td.wk{background:var(--wk)}td.wk input{background:transparent}
 :root[data-theme="dpwh"] .tabs button.on,:root[data-theme="dpwh"] button.p{background:#f7931e;border-color:#f7931e;color:#fff}
 :root[data-theme="dpwh"] .tabs{margin-top:8px}
 </style></head><body>
-<header><div><h1>Vehicle Fuel Log</h1><p>Enter liters per day and each vehicle's km/L; distance is computed (liters × km/L). Saved automatically in this browser. Use Export CSV to keep a copy.</p><p id="sync"></p><button id="mig" class="hide" style="margin-top:6px">Upload this browser's saved data to shared</button></div><select id="theme" title="Theme"><option value="dpwh">Theme: DPWH</option><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="forest">Forest</option><option value="amber">Amber</option><option value="ocean">Ocean</option></select></header>
+<header><div><h1>Vehicle Fuel Log</h1><p>Enter fuel on the Input tab and the actual odometer every Monday on the Monitoring tab. Daily odometer is computed by ratio and proportion of the fuel used.</p><p id="sync"></p><button id="mig" class="hide" style="margin-top:6px">Upload this browser's saved data to shared</button></div><select id="theme" title="Theme"><option value="dpwh">Theme: DPWH</option><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="forest">Forest</option><option value="amber">Amber</option><option value="ocean">Ocean</option></select></header>
 <div class="tabs"><button id="tin">Input</button><button id="tmon">Monitoring</button></div>
 <div class="bar" data-p="mon">
 <input type="month" id="month"><select id="week"></select>
@@ -54,6 +54,10 @@ td.wk{background:var(--wk)}td.wk input{background:transparent}
 <div class="row"><input id="ev" list="vl" placeholder="Vehicle no. or plate"><datalist id="vl"></datalist><input type="number" id="eliters" placeholder="Liters" step="any" min="0" style="width:100px"><label class="mut">From <input type="date" id="ef"></label><label class="mut">To <input type="date" id="et"></label><button id="ea" class="p">Add fuel</button><span id="emsg"></span></div>
 <p class="mut" style="margin:0 0 6px">Liters are split equally across the days (From to To, inclusive). Overlapping entries add up.</p>
 <div id="elist" style="overflow:auto"></div></details>
+<details class="card" data-p="in" open><summary>Weekly odometer readings</summary>
+<div class="row"><button id="odprev">◀ Previous week</button><input type="date" id="odd"><button id="odnext">Next week ▶</button><input type="search" id="odq" placeholder="Search vehicle or plate…"><span id="odmsg" class="mut"></span></div>
+<p class="mut" style="margin:0 0 6px">Type the actual odometer for the date shown (usually Monday). It saves as you type. Clear a box to remove a reading.</p>
+<div id="odlist" style="overflow:auto;max-height:440px"></div></details>
 <div class="wrap" data-p="mon"><table id="t"><thead></thead><tbody></tbody><tfoot></tfoot></table></div>
 <script>
 const RAW=`F5-334 N/A
@@ -265,23 +269,69 @@ function build(){
  const pre="";const [y,m]=mEl.value.split("-").map(Number);days=new Date(y,m,0).getDate();load();const rv=$("#week").value;if(rv==="0"){d0=1;d1=days}else{const p=rv.split("-").map(Number);d0=p[0];d1=p[1]}
  let h='<tr><th class="c1">Vehicle</th><th class="c2">Plate</th><th class="c3"></th>',f='<tr><td class="c1">Total</td><td class="c2"></td><td class="c3">Fuel (L)</td>';
  for(let d=d0;d<=d1;d++){h+=`<th>${d}<br><small>${"Sun Mon Tue Wed Thu Fri Sat".split(" ")[new Date(y,m-1,d).getDay()]}</small></th>`;f+=`<td id="ct${d}">0</td>`}
- h+='<th>Week L</th><th>Month L</th><th>km/L</th><th>Month km</th><th>Start odo</th><th>End odo</th></tr>';f+='<td id="wt2">0</td><td id="gt2">0</td><td id="ge2"></td><td id="gk2">0</td><td></td><td></td></tr>';
+ h+='<th>Week L</th><th>Month L</th><th>Month km</th><th>km/L</th><th>First odo</th><th>Last odo</th></tr>';f+='<td id="wt2">0</td><td id="gt2">0</td><td id="gk2">0</td><td id="ge2"></td><td></td><td></td></tr>';
  $("#t thead").innerHTML=h;$("#t tfoot").innerHTML=f;
  let b="";
  V.forEach((v,i)=>{let ob="";const sk=(v.id+" "+v.plate).toLowerCase();b+=`<tr data-i="${i}" data-s="${sk}"><td class="c1" rowspan="2">${v.id}</td><td class="c2" rowspan="2">${v.plate}</td><td class="c3">Fuel (L)</td>`;
   for(let d=d0;d<=d1;d++){const w=[0,6].includes(new Date(y,m-1,d).getDay());const val=(data[v.id]||{})[pre+d];
-   b+=`<td class="${w?"wk":""}"><input type="number" step="any" min="0" inputmode="decimal" id="f${i}_${d}" data-v="${v.id}" data-d="${pre+d}" value=""></td>`;ob+=`<td class="${w?"wk":""} od"><input type="number" step="any" min="0" inputmode="decimal" class="odo" id="o${i}_${d}" data-v="${v.id}" data-d="o${d}" value="${(data[v.id]||{})["o"+d]??""}"></td>`}
-  b+=`<td class="tot" rowspan="2" id="wk${i}"></td><td class="tot" rowspan="2" id="rt${i}"></td><td class="tot" rowspan="2"><input type="number" step="any" min="0" inputmode="decimal" data-v="${v.id}" id="e${i}" data-d="e" value="${(data[v.id]||{}).e??""}"></td><td class="tot" rowspan="2" id="rk${i}"></td><td class="tot" rowspan="2"><input type="number" step="any" min="0" inputmode="decimal" data-v="${v.id}" id="s${i}" data-d="o" value="${(data[v.id]||{}).o??""}"></td><td class="tot" rowspan="2" id="re${i}"></td></tr><tr class="or" data-s="${sk}"><td class="c3">Odometer</td>${ob}</tr>`});
+   b+=`<td class="${w?"wk":""}"><input type="number" step="any" min="0" inputmode="decimal" id="f${i}_${d}" data-v="${v.id}" data-d="${pre+d}" value=""></td>`;ob+=`<td class="${w?"wk":""} od${new Date(y,m-1,d).getDay()===1?" mon":""}"><input type="number" step="any" min="0" inputmode="decimal" class="odo" id="o${i}_${d}" data-v="${v.id}" data-d="o${d}" value="${(data[v.id]||{})["o"+d]??""}"></td>`}
+  b+=`<td class="tot" rowspan="2" id="wk${i}"></td><td class="tot" rowspan="2" id="rt${i}"></td><td class="tot" rowspan="2" id="rk${i}"></td><td class="tot" rowspan="2" id="re${i}"></td><td class="tot" rowspan="2" id="rf${i}"></td><td class="tot" rowspan="2" id="rl${i}"></td></tr><tr class="or" data-s="${sk}"><td class="c3">Odometer</td>${ob}</tr>`});
  $("#t tbody").innerHTML=b;totals();filter();
 }
+const LAST={};
+const ymd=dt=>dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");
+const lastMon=()=>{const t=new Date();t.setDate(t.getDate()-((t.getDay()+6)%7));return ymd(t)};
+const odSrc=ds=>ds.slice(0,7)===mEl.value?data:mdat(ds.slice(0,7));
+function setRead(v,ds,val){
+ const ym=ds.slice(0,7),k="o"+(+ds.slice(8));
+ if(ym===mEl.value){const o=data[v]=data[v]||{};if(val==="")delete o[k];else o[k]=val;save(v)}
+ else if(DB){const id=ym+"_"+v,o=Object.assign({},pend[id]?pend[id].d:(ALL[id]?ALL[id].d:null)||{});if(val==="")delete o[k];else o[k]=val;pend[id]={m:ym,v,d:o};clearTimeout(tm);tm=setTimeout(flush,500)}
+ else{let all={};try{all=JSON.parse(localStorage.getItem("fuel:"+ym))||{}}catch(e){}const o=all[v]=all[v]||{};if(val==="")delete o[k];else o[k]=val;try{localStorage.setItem("fuel:"+ym,JSON.stringify(all))}catch(e){}}
+ totals()}
+function renderOd(){const ds=$("#odd").value;if(!ds)return;const q=$("#odq").value.trim().toLowerCase(),src=odSrc(ds),k="o"+(+ds.slice(8));
+ $("#odmsg").textContent=new Date(ds+"T00:00:00").toLocaleDateString("en",{weekday:"long"})+(new Date(ds+"T00:00:00").getDay()===1?"":" — readings are usually taken on Mondays");
+ let h='<table class="el"><tr><th>Vehicle</th><th>Plate</th><th>Odometer reading</th></tr>';
+ V.forEach(v=>{if(q&&!(v.id+" "+v.plate).toLowerCase().includes(q))return;const r=(src[v.id]||{})[k];h+=`<tr><td>${v.id}</td><td>${v.plate}</td><td><input type="number" step="any" min="0" inputmode="decimal" class="orin" data-v="${v.id}" value="${r===undefined?"":r}" style="width:140px;text-align:right"></td></tr>`});
+ $("#odlist").innerHTML=h+'</table>'}
+function syncOd(){const ds=$("#odd").value;if(!ds)return;const src=odSrc(ds),k="o"+(+ds.slice(8));
+ document.querySelectorAll("#odlist .orin").forEach(el=>{if(document.activeElement!==el){const r=(src[el.dataset.v]||{})[k];el.value=r===undefined?"":r}})}
+$("#odlist").addEventListener("input",e=>{const t=e.target;if(t.dataset.v)setRead(t.dataset.v,$("#odd").value,t.value.trim())});
+$("#odd").addEventListener("change",renderOd);$("#odq").addEventListener("input",renderOd);
+const shiftOd=n=>{const ds=$("#odd").value||lastMon(),t=new Date(ds+"T00:00:00");t.setDate(t.getDate()+n);$("#odd").value=ymd(t);renderOd()};
+$("#odprev").onclick=()=>shiftOd(-7);$("#odnext").onclick=()=>shiftOd(7);
+$("#odd").value=lastMon();renderOd();
+function mdat(ym){
+ if(DB){const r={};Object.keys(ALL).forEach(id=>{const x=ALL[id];if(x.m===ym)r[x.v]=x.d||{}});Object.keys(pend).forEach(id=>{const q=pend[id];if(q.m===ym){if(q.d)r[q.v]=q.d;else delete r[q.v]}});return r}
+ try{return JSON.parse(localStorage.getItem("fuel:"+ym))||{}}catch(e){return {}}}
+// Ratio and proportion: between two odometer readings, the distance is shared out in proportion to the fuel used each day
+function calcOdo(f,a){const n=f.length,out=Array(n).fill(null),idx=[];
+ a.forEach((r,i)=>{if(r!==null)idx.push(i)});
+ for(let k=0;k<idx.length;k++){const i1=idx[k];out[i1]=a[i1];
+  if(k+1<idx.length){const i2=idx[k+1],R=a[i2]-a[i1];let tot=0,cum=0;for(let i=i1;i<i2;i++)tot+=f[i];
+   for(let i=i1;i<i2;i++){out[i]=a[i1]+(tot>0?R*cum/tot:R*(i-i1)/(i2-i1));cum+=f[i]}}}
+ return out}
 function totals(){
- DM=distMap();let g=0,gk=0,gl=0,wg=0;const ct=Array(days+1).fill(0);
- V.forEach((v,i)=>{let l=0,wl=0;const o=data[v.id]||{},e=num(o.e),hs=o.o!==undefined&&o.o!=="";let cum=num(o.o),kn=!!(hs&&e);
-  for(let d=1;d<=days;d++){const dv=(DM[v.id]||{})[d]||0,a=num(o[d])+dv;l+=a;const fc=$("#f"+i+"_"+d);if(fc&&document.activeElement!==fc)fc.value=Math.abs(a)>1e-9?fmt(a):"";cum+=a*e;const ov=o["o"+d],has=ov!==undefined&&ov!=="";if(has){cum=num(ov);kn=true}ct[d]+=a;if(d>=d0&&d<=d1)wl+=a;const c=$("#o"+i+"_"+d);if(c){c.classList.toggle("ovr",has);if(document.activeElement!==c)c.value=has?ov:(kn?fmt(cum):"")}}
-  wg+=wl;const wc=$("#wk"+i);if(wc)wc.textContent=wl?fmt(wl):"";const k=l*e;g+=l;gk+=k;if(k)gl+=l;
-  const ei=$("#e"+i),si=$("#s"+i);if(ei&&document.activeElement!==ei)ei.value=o.e??"";if(si&&document.activeElement!==si)si.value=o.o??"";$("#rt"+i).textContent=l?fmt(l):"";$("#rk"+i).textContent=k?fmt(k):"";$("#re"+i).textContent=kn?fmt(cum):""});
+ DM=distMap();
+ const [y,m]=mEl.value.split("-").map(Number);
+ const mm=[-1,0,1].map(dl=>{const dt=new Date(y,m-1+dl,1),yy=dt.getFullYear(),mo=dt.getMonth()+1;return{y:yy,m:mo,n:new Date(yy,mo,0).getDate(),dat:dl===0?data:mdat(yy+"-"+String(mo).padStart(2,"0"))}});
+ const off=mm[0].n,ENV={};
+ EN.forEach(x=>{const f=ud(x.f),t=ud(x.t);(ENV[x.v]=ENV[x.v]||[]).push({f,t,per:x.l/((t-f)/864e5+1)})});
+ let g=0,gk=0,gke=0,gl=0,wg=0;const ct=Array(days+1).fill(0);
+ V.forEach((v,i)=>{const f=[],a=[];
+  mm.forEach(M=>{const o=M.dat[v.id]||{};for(let d=1;d<=M.n;d++){let x=num(o[d]);const ts=Date.UTC(M.y,M.m-1,d);(ENV[v.id]||[]).forEach(q=>{if(ts>=q.f&&ts<=q.t)x+=q.per});f.push(x);const r=o["o"+d];a.push(r!==undefined&&r!==""?num(r):null)}});
+  const od=calcOdo(f,a),cur=data[v.id]||{};let l=0,wl=0,fi=-1,la=-1;const sh=[];
+  for(let d=1;d<=days;d++){const x=f[off+d-1],ov=od[off+d-1],has=a[off+d-1]!==null;l+=x;ct[d]+=x;if(d>=d0&&d<=d1)wl+=x;
+   const fc=$("#f"+i+"_"+d);if(fc&&document.activeElement!==fc)fc.value=Math.abs(x)>1e-9?fmt(x):"";
+   const wkd=[0,6].includes(new Date(y,m-1,d).getDay()),hide=!has&&wkd&&Math.abs(x)<1e-9;sh.push(hide?null:ov);const c=$("#o"+i+"_"+d);if(c){c.classList.toggle("ovr",has);if(document.activeElement!==c)c.value=has?cur["o"+d]:(ov!==null&&!hide?fmt(ov):"")}
+   if(ov!==null){if(fi<0)fi=d;la=d}}
+  let dist=null,eff=null;
+  if(fi>0&&la>fi){dist=od[off+la-1]-od[off+fi-1];let fu=0;for(let d=fi;d<la;d++)fu+=f[off+d-1];gk+=dist;if(fu>0){eff=dist/fu;gke+=dist;gl+=fu}}
+  g+=l;wg+=wl;
+  const set=(p,t)=>{const e=$("#"+p+i);if(e)e.textContent=t};
+  set("wk",wl?fmt(wl):"");set("rt",l?fmt(l):"");set("rk",dist!==null?fmt(dist):"");set("re",eff!==null?fmt(eff):"");set("rf",fi>0?fmt(od[off+fi-1]):"");set("rl",la>0?fmt(od[off+la-1]):"");
+  LAST[v.id]={f:f.slice(off,off+days),od:sh,l,dist,eff,fo:fi>0?fmt(od[off+fi-1]):"",lo:la>0?fmt(od[off+la-1]):""}});
  for(let d=1;d<=days;d++){const x=$("#ct"+d);if(x)x.textContent=ct[d]?fmt(ct[d]):""}
- const fe=gk?fmt(gk/gl):"–";$("#gt2").textContent=fmt(g);$("#wt2").textContent=fmt(wg);$("#gt").textContent=fmt(g);$("#gk2").textContent=fmt(gk);$("#gk").textContent=fmt(gk);$("#ge").textContent=fe;$("#ge2").textContent=gk?fe:"";
+ const fe=gl?fmt(gke/gl):"–";$("#gt2").textContent=fmt(g);$("#wt2").textContent=fmt(wg);$("#gt").textContent=fmt(g);$("#gk2").textContent=fmt(gk);$("#gk").textContent=fmt(gk);$("#ge").textContent=fe;$("#ge2").textContent=gl?fe:"";syncOd();
 }
 function filter(){const q=$("#q").value.trim().toLowerCase();document.querySelectorAll("#t tbody tr").forEach(r=>r.classList.toggle("hide",q&&!r.dataset.s.includes(q)))}
 $("#t tbody").addEventListener("input",e=>{const t=e.target;if(!t.dataset.v)return;
@@ -292,15 +342,16 @@ $("#q").addEventListener("input",filter);$("#t tbody").addEventListener("change"
 mEl.addEventListener("change",()=>{fillWeeks();build()});$("#week").addEventListener("change",build);
 $("#clr").onclick=()=>{if(confirm("Clear all fuel entries for "+mEl.value+"?")){data={};save();build()}};
 $("#exp").onclick=()=>{
- let c="Vehicle,Plate,"+Array.from({length:days},(_,i)=>i+1).join(",")+",Total L,km/L,Distance km,Start odo,End odo\n";
- V.forEach(v=>{const o=data[v.id]||{};let l=0;const r=[];for(let d=1;d<=days;d++){const a=num(o[d])+((DM[v.id]||{})[d]||0);r.push(a?fmt(a):"");l+=a}
-  c+=`"${v.id}","${v.plate}",${r.join(",")},${fmt(l)},${o.e??""},${o.e?fmt(l*num(o.e)):""},${o.o??""},${o.o&&o.e?fmt(num(o.o)+l*num(o.e)):""}\n`});
+ let c="Vehicle,Plate,Row,"+Array.from({length:days},(_,i)=>i+1).join(",")+",Total L,Month km,km/L,First odo,Last odo\n";
+ V.forEach(v=>{const L=LAST[v.id];if(!L)return;
+  c+=`"${v.id}","${v.plate}",Fuel (L),${L.f.map(x=>Math.abs(x)>1e-9?fmt(x):"").join(",")},${fmt(L.l)},,,,\n`;
+  c+=`"${v.id}","${v.plate}",Odometer,${L.od.map(x=>x===null?"":fmt(x)).join(",")},,${L.dist!==null?fmt(L.dist):""},${L.eff!==null?fmt(L.eff):""},${L.fo},${L.lo}\n`});
  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([c],{type:"text/csv"}));a.download="fuel-"+mEl.value+".csv";a.click()};
 $("#imp").onclick=()=>$("#file").click();
 $("#file").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
- r.onload=()=>{const L=r.result.trim().split(/\r?\n/).slice(1);data={};
+ r.onload=()=>{const L=r.result.trim().split(/\r?\n/).slice(1);{const keep={};Object.keys(data).forEach(v=>{Object.keys(data[v]).forEach(k=>{if(k[0]==="o")(keep[v]=keep[v]||{})[k]=data[v][k]})});data=keep}
   L.forEach(l=>{const c=l.match(/("([^"]*)"|[^,]*)(,|$)/g).map(x=>x.replace(/,$/,"").replace(/^"|"$/g,""));
-   const id=c[0];for(let d=1;d<=days;d++){if(c[1+d]!==undefined&&c[1+d]!=="")(data[id]=data[id]||{})[d]=String(num(c[1+d])-((DM[id]||{})[d]||0))}const e=c[days+3],oo=c[days+5];if(e)(data[id]=data[id]||{}).e=e;if(oo)(data[id]=data[id]||{}).o=oo});
+   if(c[2]!=="Fuel (L)")return;const id=c[0];for(let d=1;d<=days;d++){if(c[2+d]!==undefined&&c[2+d]!=="")(data[id]=data[id]||{})[d]=String(num(c[2+d])-((DM[id]||{})[d]||0))}});
   save();build()};r.readAsText(f);e.target.value=""};
 const n=new Date();mEl.value=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0");$("#vl").innerHTML=V.map(v=>`<option value="${v.id}">${v.plate}</option>`).join("");const td=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");$("#ef").value=td;$("#et").value=td;const show=p=>{document.querySelectorAll("[data-p]").forEach(e=>e.classList.toggle("hide",e.dataset.p!==p));$("#tin").classList.toggle("on",p==="in");$("#tmon").classList.toggle("on",p==="mon")};$("#tin").onclick=()=>show("in");$("#tmon").onclick=()=>show("mon");renderEN();fillWeeks();build();show("in");let st="dpwh";try{st=localStorage.getItem("fuel:theme")||"dpwh"}catch(e){}const setTheme=t=>{if(t==="auto")document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("fuel:theme",t)}catch(e){}};$("#theme").value=st;setTheme(st);$("#theme").onchange=e=>setTheme(e.target.value);initDB();
 </script></body></html>
