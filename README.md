@@ -23,6 +23,11 @@ Settings -> Change password. The new password is stored in the shared database, 
 This is a light lock to keep casual visitors out. It is not strong security: the data itself is protected only by
 the Firestore rules, and anyone who can read the page code could bypass the screen.
 
+## Phones
+On a phone the tabs become a bar at the bottom, the weekly odometer list shows one card per vehicle with a large number box,
+the Monitoring grid keeps the vehicle column fixed while the days scroll sideways, and the other tables turn into cards.
+The laptop layout is unchanged.
+
 ## Pages
 - **Input**: add fuel by date range, and enter the weekly odometer readings (one box per vehicle for the chosen Monday). Liters are split equally across the days (inclusive);
   overlapping entries add up.

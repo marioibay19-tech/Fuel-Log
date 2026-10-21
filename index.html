@@ -38,6 +38,40 @@ td.wk{background:var(--wk)}td.wk input{background:transparent}
 .bad{color:#d1242f;font-weight:600}.warn{color:#c26a00;font-weight:600}.ok{color:#1a7f37;font-weight:600}
 .badge{display:inline-block;min-width:22px;text-align:center;border-radius:10px;padding:0 8px;color:#fff;background:#1a7f37;font-size:12px;margin-left:6px}.badge.n{background:#d1242f}
 .bar2{display:flex;align-items:center;gap:8px;margin:2px 0}.bar2 i{display:block;height:14px;background:var(--ac);border-radius:3px}
+.tabs button .sm{display:none}.pl{display:none}
+@media(max-width:700px){
+ html,body{overflow-x:hidden}
+ body{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+ header{padding:10px 12px;gap:8px}header h1{font-size:17px}header p{font-size:12px}header p:not(#sync){display:none}header>div{min-width:100%}
+ header select,header button{flex:1 1 30%;min-height:40px;font-size:15px}
+ .tabs{position:fixed;left:0;right:0;bottom:0;z-index:60;margin:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--bd);flex-wrap:nowrap;gap:4px;box-shadow:0 -2px 8px #0002}
+ .tabs button{flex:1;min-width:0;padding:10px 2px;font-size:11px;border-radius:8px}
+ .tabs button .lg{display:none}.tabs button .sm{display:inline}
+ input,select,button,textarea{font-size:16px}
+ .card input:not([type=checkbox]),.card select,.card button,.bar input,.bar select,.bar button{min-height:44px}
+ .row>*,.bar>*{flex:1 1 140px}.row>label,.row>span{flex:1 1 100%}
+ .stat{margin:0;flex:1 1 100%}
+ .card,.wrap{margin-left:10px;margin-right:10px}
+ .bar{padding:8px 10px}.wrap{max-height:66vh}
+ .c2{display:none}.c1{min-width:84px;max-width:84px;font-size:13px;white-space:normal}.c3{left:84px;min-width:54px;font-size:11px;padding:2px 4px}
+ .pl{display:block;font-weight:400;font-size:10px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ td input{width:64px}
+ #odlist .el,#odlist .el tbody{display:block}
+ #odlist .el tr:first-child{display:none}
+ #odlist .el tr{display:grid;grid-template-columns:1fr 150px;align-items:center;border:1px solid var(--bd);border-radius:10px;margin:6px 0;padding:8px 10px;background:var(--card)}
+ #odlist .el td{border:0;padding:0;display:block}
+ #odlist .el td:nth-child(1){font-weight:700;font-size:16px}
+ #odlist .el td:nth-child(2){grid-column:1;color:var(--mut);font-size:13px}
+ #odlist .el td:nth-child(3){grid-column:2;grid-row:1 / span 2}
+ #odlist input.orin{width:100%!important;font-size:20px;min-height:48px}
+ #odlist .el td:nth-child(1),#odlist .el td:nth-child(2){text-align:left}
+ #odd{order:-1;flex:1 1 100%}#odprev,#odnext{flex:1 1 45%}
+ table.el.cd,table.el.cd tbody{display:block}
+ table.el.cd tr:first-child{display:none}
+ table.el.cd tr{display:block;border:1px solid var(--bd);border-radius:10px;margin:6px 0;padding:6px 10px;background:var(--card)}
+ table.el.cd td,table.el.cd th{display:flex;justify-content:space-between;align-items:center;gap:10px;border:0;padding:3px 0;font-size:14px;text-align:right}
+ table.el.cd td::before,table.el.cd th::before{content:attr(data-l);color:var(--mut);text-align:left;font-weight:400}
+}
 @media print{header,.tabs,#gate,.nop,[data-p]:not(#prep){display:none!important}#prep{display:block!important}body{background:#fff!important}.card{box-shadow:none;border:0}}
 html[data-bg="pattern"] body{background-image:radial-gradient(circle at 1px 1px,color-mix(in srgb,var(--ac) 18%,transparent) 1px,transparent 0),linear-gradient(180deg,color-mix(in srgb,var(--ac) 10%,transparent),transparent 360px);background-size:22px 22px,100% 100%;background-attachment:fixed}
 html[data-bg="image"] body{background-image:linear-gradient(color-mix(in srgb,var(--bg) 78%,transparent),color-mix(in srgb,var(--bg) 78%,transparent)),var(--bgimg);background-size:cover;background-position:center;background-attachment:fixed}
@@ -53,7 +87,7 @@ html[data-bg="image"] body{background-image:linear-gradient(color-mix(in srgb,va
 </style></head><body>
 <div id="gate"><div class="gbox"><h2>Vehicle Fuel Log</h2><p class="mut" id="gmsg">Enter the password to continue.</p><input type="password" id="gpw" placeholder="Password" autocomplete="current-password"><button id="ggo" class="p">Unlock</button></div></div>
 <header><div><h1>Vehicle Fuel Log</h1><p>Enter fuel on the Input tab and the actual odometer every Monday on the Monitoring tab. Daily odometer is computed by ratio and proportion of the fuel used.</p><p id="sync"></p><button id="mig" class="hide" style="margin-top:6px">Upload this browser's saved data to shared</button></div><select id="theme" title="Theme"><option value="dpwh">Theme: DPWH</option><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="forest">Forest</option><option value="amber">Amber</option><option value="ocean">Ocean</option></select><select id="bg" title="Background"><option value="pattern">Background: Pattern</option><option value="plain">Plain</option><option value="image">My image…</option></select><input type="file" id="bgfile" accept="image/*" class="hide"><button id="lock" title="Lock the page">Lock</button></header>
-<div class="tabs"><button data-t="in">Input</button><button data-t="mon">Monitoring</button><button data-t="chk">Checks</button><button data-t="pm">Maintenance</button><button data-t="rep">Reports</button><button data-t="set">Settings</button></div>
+<div class="tabs"><button data-t="in"><span class="lg">Input</span><span class="sm">Input</span></button><button data-t="mon"><span class="lg">Monitoring</span><span class="sm">Monitor</span></button><button data-t="chk"><span class="lg">Checks</span><span class="sm">Checks</span></button><button data-t="pm"><span class="lg">Maintenance</span><span class="sm">PM</span></button><button data-t="rep"><span class="lg">Reports</span><span class="sm">Reports</span></button><button data-t="set"><span class="lg">Settings</span><span class="sm">Settings</span></button></div>
 <div class="bar" data-p="mon">
 <input type="month" id="month"><select id="week"></select>
 <input type="search" id="q" placeholder="Search vehicle or plate…">
@@ -63,7 +97,7 @@ html[data-bg="image"] body{background-image:linear-gradient(color-mix(in srgb,va
 <span class="stat"><b id="gt">0</b> L · <b id="gk">0</b> km</span>
 </div>
 <details class="card" data-p="in" open><summary>Add fuel by date range</summary>
-<div class="row"><input id="ev" list="vl" placeholder="Vehicle no. or plate"><datalist id="vl"></datalist><input type="number" id="eliters" placeholder="Liters" step="any" min="0" style="width:100px"><label class="mut">From <input type="date" id="ef"></label><label class="mut">To <input type="date" id="et"></label><button id="ea" class="p">Add fuel</button><span id="emsg"></span></div>
+<div class="row"><input id="ev" list="vl" placeholder="Vehicle no. or plate"><datalist id="vl"></datalist><input type="number" id="eliters" inputmode="decimal" placeholder="Liters" step="any" min="0" style="width:100px"><label class="mut">From <input type="date" id="ef"></label><label class="mut">To <input type="date" id="et"></label><button id="ea" class="p">Add fuel</button><span id="emsg"></span></div>
 <p class="mut" style="margin:0 0 6px">Liters are split equally across the days (From to To, inclusive). Overlapping entries add up.</p>
 <div id="elist" style="overflow:auto"></div></details>
 <details class="card" data-p="in" open><summary>Weekly odometer readings</summary>
@@ -316,7 +350,7 @@ function build(){
  h+='<th>Week L</th><th>Month L</th><th>Month km</th><th>First odo</th><th>Last odo</th></tr>';f+='<td id="wt2">0</td><td id="gt2">0</td><td id="gk2">0</td><td></td><td></td></tr>';
  $("#t thead").innerHTML=h;$("#t tfoot").innerHTML=f;
  let b="";
- V.forEach((v,i)=>{let ob="";const sk=(v.id+" "+v.plate).toLowerCase();b+=`<tr data-i="${i}" data-s="${sk}"><td class="c1" rowspan="2">${v.id}</td><td class="c2" rowspan="2">${v.plate}</td><td class="c3">Fuel (L)</td>`;
+ V.forEach((v,i)=>{let ob="";const sk=(v.id+" "+v.plate).toLowerCase();b+=`<tr data-i="${i}" data-s="${sk}"><td class="c1" rowspan="2">${v.id}<small class="pl">${v.plate}</small></td><td class="c2" rowspan="2">${v.plate}</td><td class="c3">Fuel (L)</td>`;
   for(let d=d0;d<=d1;d++){const w=[0,6].includes(new Date(y,m-1,d).getDay());const val=(data[v.id]||{})[pre+d];
    b+=`<td class="${w?"wk":""}"><input type="number" step="any" min="0" inputmode="decimal" id="f${i}_${d}" data-v="${v.id}" data-d="${pre+d}" value=""></td>`;ob+=`<td class="${w?"wk":""} od${new Date(y,m-1,d).getDay()===1?" mon":""}"><input type="number" step="any" min="0" inputmode="decimal" class="odo" id="o${i}_${d}" data-v="${v.id}" data-d="o${d}" value="${(data[v.id]||{})["o"+d]??""}"></td>`}
   b+=`<td class="tot" rowspan="2" id="wk${i}"></td><td class="tot" rowspan="2" id="rt${i}"></td><td class="tot" rowspan="2" id="rk${i}"></td><td class="tot" rowspan="2" id="rf${i}"></td><td class="tot" rowspan="2" id="rl${i}"></td></tr><tr class="or" data-s="${sk}"><td class="c3">Odometer</td>${ob}</tr>`});
@@ -402,7 +436,7 @@ const cfg=()=>Object.assign({pmDef:5000,pmWarn:500,minEff:1.5,maxEff:25,pmUrl:""
 const dl=(name,text)=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:"text/csv"}));a.download=name;a.click()};
 const fillVL=()=>{$("#vl").innerHTML=V.map(v=>`<option value="${esc(v.id)}">${esc(v.plate)}</option>`).join("")};
 let TAB="in",sReady=true;
-function show(p){TAB=p;document.querySelectorAll("[data-p]").forEach(e=>e.classList.toggle("hide",e.dataset.p!==p));
+function show(p){TAB=p;window.scrollTo(0,0);document.querySelectorAll("[data-p]").forEach(e=>e.classList.toggle("hide",e.dataset.p!==p));
  document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===p));
  if(p==="chk")renderChk();if(p==="pm")renderPM();if(p==="rep"){$("#rm").value=mEl.value;renderRep()}if(p==="set")renderSet()}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>show(b.dataset.t));
@@ -532,6 +566,8 @@ function renderRep(){
 $("#rm").addEventListener("change",e=>{if(!e.target.value)return;mEl.value=e.target.value;mEl.dispatchEvent(new Event("change"));renderRep()});
 $("#repprint").onclick=()=>window.print();
 $("#repcsv").onclick=()=>{let c="Vehicle,Plate,Liters,Km,km/L,First odo,Last odo\n";REPROWS.forEach(r=>{c+=`"${r.v.id}","${r.v.plate}",${fmt(r.L.l)},${r.L.dist!==null?fmt(r.L.dist):""},${r.L.eff?fmt(r.L.eff):""},${r.L.fo},${r.L.lo}\n`});dl("report-"+mEl.value+".csv",c)};
+const lab=el=>el.querySelectorAll("table.el").forEach(t=>{if(t.classList.contains("cd")||!t.rows.length)return;const hs=[...t.rows[0].cells].map(c=>c.textContent);t.classList.add("cd");[...t.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{c.dataset.l=hs[i]||""}))});
+["chkout","pmout","repout","vlist","elist"].forEach(id=>{const e=$("#"+id);new MutationObserver(()=>lab(e)).observe(e,{childList:true});lab(e)});
 renderEN();fillWeeks();build();fillVL();show("in");
 let st="dpwh";try{st=localStorage.getItem("fuel:theme")||"dpwh"}catch(e){}const setTheme=t=>{if(t==="auto")document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("fuel:theme",t)}catch(e){}};$("#theme").value=st;setTheme(st);$("#theme").onchange=e=>setTheme(e.target.value);
 let bgm="pattern",bgi="";try{bgm=localStorage.getItem("fuel:bg")||"pattern";bgi=localStorage.getItem("fuel:bgimg")||""}catch(e){}
