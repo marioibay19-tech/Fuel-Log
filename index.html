@@ -63,7 +63,9 @@ td.wk{background:var(--wk)}td.wk input{background:transparent}
  #odlist .el td{border:0;padding:0;display:block}
  #odlist .el td:nth-child(1){font-weight:700;font-size:16px}
  #odlist .el td:nth-child(2){grid-column:1;color:var(--mut);font-size:13px}
- #odlist .el td:nth-child(3){grid-column:2;grid-row:1 / span 2}
+ #odlist .el td:nth-child(3){grid-column:2;grid-row:1}
+ #odlist .el td:nth-child(4){grid-column:2;grid-row:2;margin-top:6px}
+ #odlist .dl{display:block;font-size:11px;color:var(--mut);margin-bottom:2px}
  #odlist input.orin{width:100%!important;font-size:20px;min-height:48px}
  #odlist .el td:nth-child(1),#odlist .el td:nth-child(2){text-align:left}
  #odd{order:-1;flex:1 1 100%}#odprev,#odnext{flex:1 1 45%}
@@ -92,6 +94,7 @@ html[data-bg="image"] body{background-image:linear-gradient(color-mix(in srgb,va
 :root[data-theme="dpwh"] .tabs{margin-top:8px}
 
 /* ---- refined look ---- */
+.dl{display:none}
 .logo{height:58px;width:auto;display:block}.logo.big{height:84px;margin:0 auto 4px}
 header>.logo{margin-right:2px}
 body{font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.45;font-variant-numeric:tabular-nums lining-nums}
@@ -140,7 +143,7 @@ tbody tr:hover td.c1,tbody tr:hover td.c3{background-color:color-mix(in srgb,var
 </style></head><body>
 <div id="toast"></div>
 <div id="gate"><div class="gbox"><img class="logo big" src="logo.png" alt="DPWH logo" onerror="this.remove()"><h2>Vehicle Fuel Log</h2><p class="mut" id="gmsg">Enter the password to continue.</p><input type="password" id="gpw" placeholder="Password" autocomplete="current-password"><button id="ggo" class="p">Unlock</button></div></div>
-<header><img class="logo" src="logo.png" alt="DPWH logo" onerror="this.remove()"><div><h1>Vehicle Fuel Log</h1><p>Enter fuel on the Input tab and the actual odometer every Monday on the Monitoring tab. Daily odometer is computed by ratio and proportion of the fuel used.</p><p id="sync"></p><button id="mig" class="hide" style="margin-top:6px">Upload this browser's saved data to shared</button></div><select id="theme" title="Theme"><option value="dpwh">Theme: DPWH</option><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="forest">Forest</option><option value="amber">Amber</option><option value="ocean">Ocean</option></select><select id="bg" title="Background"><option value="pattern">Background: Pattern</option><option value="plain">Plain</option><option value="image">My image…</option></select><input type="file" id="bgfile" accept="image/*" class="hide"><button id="lock" title="Lock the page">Lock</button></header>
+<header><img class="logo" src="logo.png" alt="DPWH logo" onerror="this.remove()"><div><h1>Vehicle Fuel Log</h1><p>Enter fuel and the actual odometer (Monday and Friday) on the Input tab. The Monitoring tab shows the daily odometer, worked out by ratio and proportion of the fuel used.</p><p id="sync"></p><button id="mig" class="hide" style="margin-top:6px">Upload this browser's saved data to shared</button></div><select id="theme" title="Theme"><option value="dpwh">Theme: DPWH</option><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="forest">Forest</option><option value="amber">Amber</option><option value="ocean">Ocean</option></select><select id="bg" title="Background"><option value="pattern">Background: Pattern</option><option value="plain">Plain</option><option value="image">My image…</option></select><input type="file" id="bgfile" accept="image/*" class="hide"><button id="lock" title="Lock the page">Lock</button></header>
 <div class="tabs"><button data-t="in"><span class="lg">Input</span><span class="sm">Input</span></button><button data-t="mon"><span class="lg">Monitoring</span><span class="sm">Monitor</span></button><button data-t="chk"><span class="lg">Checks</span><span class="sm">Checks</span></button><button data-t="pm"><span class="lg">Maintenance</span><span class="sm">PM</span></button><button data-t="rep"><span class="lg">Reports</span><span class="sm">Reports</span></button><button data-t="set"><span class="lg">Settings</span><span class="sm">Settings</span></button></div>
 <div class="bar" data-p="mon">
 <input type="month" id="month"><select id="week"></select><button id="today" title="Go to the current week">Today</button>
@@ -152,7 +155,7 @@ tbody tr:hover td.c1,tbody tr:hover td.c3{background-color:color-mix(in srgb,var
 </div>
 <details class="card help" data-p="in" id="help"><summary>How to use this page</summary>
 <ol><li><b>Add fuel</b> below: pick the vehicle, the liters, and the dates. The liters are shared equally across the days.</li>
-<li><b>Every Monday</b>, type each vehicle's actual odometer in "Weekly odometer readings".</li>
+<li><b>Every Monday and Friday</b>, type each vehicle's actual odometer in "Weekly odometer readings".</li>
 <li><b>Monitoring</b> shows each day's fuel and the odometer worked out from it. Bold = a reading you typed; grey italic = computed.</li>
 <li><b>Checks</b> finds mistakes, <b>Maintenance</b> shows which vehicles are due for PM, and <b>Reports</b> gives the monthly summary.</li></ol></details>
 <details class="card" data-p="in" open><summary>Add fuel by date range</summary>
@@ -160,13 +163,13 @@ tbody tr:hover td.c1,tbody tr:hover td.c3{background-color:color-mix(in srgb,var
 <p class="mut" style="margin:0 0 6px">Liters are split equally across the days (From to To, inclusive). Overlapping entries add up.</p>
 <div id="elist" style="overflow:auto"></div></details>
 <details class="card" data-p="in" open><summary>Weekly odometer readings</summary>
-<div class="row"><button id="odprev">◀ Previous week</button><input type="date" id="odd"><button id="odnext">Next week ▶</button><input type="search" id="odq" placeholder="Search vehicle or plate…"><span id="odmsg" class="mut"></span><label class="mut"><input type="checkbox" id="odmiss"> Show only vehicles with no reading</label><span id="odprog" class="mut"></span></div>
-<p class="mut" style="margin:0 0 6px">Type the actual odometer for the date shown (usually Monday). It saves as you type. Clear a box to remove a reading.</p>
+<div class="row"><button id="odprev">◀ Previous week</button><input type="date" id="odd"><button id="odnext">Next week ▶</button><input type="search" id="odq" placeholder="Search vehicle or plate…"><span id="odmsg" class="mut"></span><label class="mut"><input type="checkbox" id="odmiss"> Show only vehicles with a missing reading</label><span id="odprog" class="mut"></span></div>
+<p class="mut" style="margin:0 0 6px">Type each vehicle's actual odometer for Monday and Friday of the chosen week. It saves as you type. Clear a box to remove a reading.</p>
 <div id="odlist" style="overflow:auto;max-height:440px"></div></details>
 <p class="mut" data-p="mon" style="margin:0 16px 6px;font-size:12px">Odometer row: <b>bold</b> = a reading you typed &middot; <i>grey italic</i> = computed from the fuel. Weekend days with no fuel are left blank. Today is highlighted.</p>
 <div class="wrap" data-p="mon"><table id="t"><thead></thead><tbody></tbody><tfoot></tfoot></table></div>
 <div data-p="chk" class="hide"><div class="card"><b>Data checks</b> <span class="mut" id="chkm"></span>
-<div class="row"><label class="mut">Missing readings for <input type="date" id="chkd"></label><button id="chkgo" class="p">Run checks</button></div>
+<div class="row"><label class="mut">Missing readings for the week of <input type="date" id="chkd"></label><button id="chkgo" class="p">Run checks</button></div>
 <div id="chkout"></div></div></div>
 <div data-p="pm" class="hide"><div class="card"><b>Preventive maintenance (PM) due</b>
 <p class="mut" style="margin:4px 0 6px">Uses each vehicle's latest odometer reading. Enter the odometer of its last PM and (optionally) its own PM interval. Defaults are in Settings.</p>
@@ -426,17 +429,28 @@ function setRead(v,ds,val){
  else if(DB){const id=ym+"_"+v,o=Object.assign({},pend[id]?pend[id].d:(ALL[id]?ALL[id].d:null)||{});if(val==="")delete o[k];else o[k]=val;pend[id]={m:ym,v,d:o};clearTimeout(tm);tm=setTimeout(flush,500)}
  else{let all={};try{all=JSON.parse(localStorage.getItem("fuel:"+ym))||{}}catch(e){}const o=all[v]=all[v]||{};if(val==="")delete o[k];else o[k]=val;try{localStorage.setItem("fuel:"+ym,JSON.stringify(all))}catch(e){}}
  totals()}
-function renderOd(){const ds=$("#odd").value;if(!ds)return;const q=$("#odq").value.trim().toLowerCase(),src=odSrc(ds),k="o"+(+ds.slice(8));
- $("#odmsg").textContent=new Date(ds+"T00:00:00").toLocaleDateString("en",{weekday:"long"})+(new Date(ds+"T00:00:00").getDay()===1?"":" — readings are usually taken on Mondays");
- let h='<table class="el"><tr><th>Vehicle</th><th>Plate</th><th>Odometer reading</th></tr>';
- V.forEach(v=>{if(q&&!(v.id+" "+v.plate).toLowerCase().includes(q))return;const r=(src[v.id]||{})[k];if($("#odmiss").checked&&r!==undefined&&r!=="")return;h+=`<tr><td>${v.id}</td><td>${v.plate}</td><td><input type="number" step="any" min="0" inputmode="decimal" class="orin" data-v="${v.id}" value="${r===undefined?"":r}" style="width:140px;text-align:right"></td></tr>`});
+const snapMon=ds=>{const t=new Date(ds+"T00:00:00");t.setDate(t.getDate()-((t.getDay()+6)%7));return ymd(t)};
+const addD=(ds,n)=>{const t=new Date(ds+"T00:00:00");t.setDate(t.getDate()+n);return ymd(t)};
+const rdv=(ds,vid)=>{const r=(odSrc(ds)[vid]||{})["o"+(+ds.slice(8))];return r===undefined?"":r};
+const odDates=()=>{const mon=snapMon($("#odd").value||lastMon());return [mon,addD(mon,4)]};
+function renderOd(){const [mon,fri]=odDates();$("#odd").value=mon;
+ const q=$("#odq").value.trim().toLowerCase(),sm=odSrc(mon),sf=odSrc(fri),km="o"+(+mon.slice(8)),kf="o"+(+fri.slice(8));
+ const fd=ds=>new Date(ds+"T00:00:00").toLocaleDateString("en",{month:"short",day:"numeric"});
+ $("#odmsg").textContent="Week of Monday "+fd(mon)+" to Friday "+fd(fri);
+ let h='<table class="el"><tr><th>Vehicle</th><th>Plate</th><th>Monday ('+fd(mon)+')</th><th>Friday ('+fd(fri)+')</th></tr>';
+ V.forEach(v=>{if(q&&!(v.id+" "+v.plate).toLowerCase().includes(q))return;
+  const a=(sm[v.id]||{})[km],b=(sf[v.id]||{})[kf],ha=a!==undefined&&a!=="",hb=b!==undefined&&b!=="";
+  if($("#odmiss").checked&&ha&&hb)return;
+  h+=`<tr><td>${v.id}</td><td>${v.plate}</td><td><small class="dl">Monday</small><input type="number" step="any" min="0" inputmode="decimal" class="orin" data-v="${v.id}" data-ds="${mon}" placeholder="Mon" value="${ha?a:""}" style="width:130px;text-align:right"></td><td><small class="dl">Friday</small><input type="number" step="any" min="0" inputmode="decimal" class="orin" data-v="${v.id}" data-ds="${fri}" placeholder="Fri" value="${hb?b:""}" style="width:130px;text-align:right"></td></tr>`});
  $("#odlist").innerHTML=h+'</table>';progOd()}
-function progOd(){const ds=$("#odd").value;if(!ds)return;const src=odSrc(ds),k="o"+(+ds.slice(8));const n=V.filter(v=>{const r=(src[v.id]||{})[k];return r!==undefined&&r!==""}).length;$("#odprog").textContent=n+" of "+V.length+" vehicles have a reading"+(n===V.length?" ✓":"")}
-function syncOd(){const ds=$("#odd").value;if(!ds)return;const src=odSrc(ds),k="o"+(+ds.slice(8));
- document.querySelectorAll("#odlist .orin").forEach(el=>{if(document.activeElement!==el){const r=(src[el.dataset.v]||{})[k];el.value=r===undefined?"":r}});progOd()}
-$("#odlist").addEventListener("input",e=>{const t=e.target;if(t.dataset.v)setRead(t.dataset.v,$("#odd").value,t.value.trim())});
+function progOd(){const [mon,fri]=odDates(),sm=odSrc(mon),sf=odSrc(fri),km="o"+(+mon.slice(8)),kf="o"+(+fri.slice(8)),ok=(S,v,k)=>{const r=(S[v.id]||{})[k];return r!==undefined&&r!==""};
+ const nm=V.filter(v=>ok(sm,v,km)).length,nf=V.filter(v=>ok(sf,v,kf)).length;
+ $("#odprog").textContent="Monday: "+nm+" of "+V.length+" · Friday: "+nf+" of "+V.length+(nm===V.length&&nf===V.length?" ✓":"")}
+function syncOd(){const [mon,fri]=odDates(),S={};S[mon]=odSrc(mon);S[fri]=odSrc(fri);
+ document.querySelectorAll("#odlist .orin").forEach(el=>{if(document.activeElement!==el){const ds=el.dataset.ds,r=((S[ds]||{})[el.dataset.v]||{})["o"+(+ds.slice(8))];el.value=r===undefined?"":r}});progOd()}
+$("#odlist").addEventListener("input",e=>{const t=e.target;if(t.dataset.v)setRead(t.dataset.v,t.dataset.ds,t.value.trim())});
 $("#odd").addEventListener("change",renderOd);$("#odq").addEventListener("input",renderOd);
-const shiftOd=n=>{const ds=$("#odd").value||lastMon(),t=new Date(ds+"T00:00:00");t.setDate(t.getDate()+n);$("#odd").value=ymd(t);renderOd()};
+const shiftOd=n=>{const mon=snapMon($("#odd").value||lastMon());$("#odd").value=addD(mon,n);renderOd()};
 $("#odprev").onclick=()=>shiftOd(-7);$("#odnext").onclick=()=>shiftOd(7);
 $("#odd").value=lastMon();renderOd();
 function mdat(ym){
@@ -592,10 +606,10 @@ $("#pmlink").onclick=()=>{const u=cfg().pmUrl;if(u)window.open(u,"_blank")};
 /* ---- Checks tab ---- */
 function idxDate(i){let k=0;for(const M of WIN.mm){if(i<k+M.n)return M.y+"-"+String(M.m).padStart(2,"0")+"-"+String(i-k+1).padStart(2,"0");k+=M.n}return ""}
 function renderChk(){
- const c=cfg(),d=$("#chkd").value||lastMon();if(!$("#chkd").value)$("#chkd").value=d;
+ const c=cfg(),d=snapMon($("#chkd").value||lastMon());$("#chkd").value=d;const dF=addD(d,4);
  if(!WIN){$("#chkout").innerHTML="";return}
  const mn=WIN.mm;$("#chkm").textContent="Readings and fuel from "+idxDate(0)+" to "+idxDate(WIN.mm.reduce((a,M)=>a+M.n,0)-1)+" (month shown in Monitoring ± 1 month)";
- const src=odSrc(d),k="o"+(+d.slice(8)),miss=V.filter(v=>{const r=(src[v.id]||{})[k];return r===undefined||r===""});
+ const miss=V.filter(v=>rdv(d,v.id)===""),missF=V.filter(v=>rdv(dF,v.id)==="");
  const dec=[],nof=[],eff=[];
  V.forEach(v=>{const L=LAST[v.id];if(!L)return;const A=L.A,F=L.F;let pv=-1;
   for(let i=0;i<A.length;i++){if(A[i]===null)continue;
@@ -609,7 +623,8 @@ function renderChk(){
  const iv=r=>[esc(r.v.id),esc(r.v.plate),r.d1+" → "+r.d2,fmt(r.r1),fmt(r.r2),fmt(r.R),fmt(r.fu)];
  const ih=["Vehicle","Plate","Between","Reading 1","Reading 2","Km","Liters"];
  $("#chkout").innerHTML=
-  sec("No odometer reading on "+d,miss.length,T(["Vehicle","Plate"],miss.map(v=>[esc(v.id),esc(v.plate)])))+
+  sec("No Monday reading ("+d+")",miss.length,T(["Vehicle","Plate"],miss.map(v=>[esc(v.id),esc(v.plate)])))+
+  sec("No Friday reading ("+dF+")",missF.length,T(["Vehicle","Plate"],missF.map(v=>[esc(v.id),esc(v.plate)])))+
   sec("Odometer went down",dec.length,T(ih,dec.map(iv)),"A later reading is lower than an earlier one. Usually a typing mistake.")+
   sec("km/L outside "+c.minEff+" to "+c.maxEff,eff.length,T(ih.concat(["km/L"]),eff.map(r=>iv(r).concat([fmt(r.e)]))),"Distance between two readings compared with the fuel used in that time.")+
   sec("Distance but no fuel recorded",nof.length,T(ih,nof.map(iv)),"The odometer moved but no fuel is entered between the two readings.")+

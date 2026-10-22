@@ -34,7 +34,7 @@ the Monitoring grid keeps the vehicle column fixed while the days scroll sideway
 The laptop layout is unchanged.
 
 ## Pages
-- **Input**: add fuel by date range, and enter the weekly odometer readings (one box per vehicle for the chosen Monday). Liters are split equally across the days (inclusive);
+- **Input**: add fuel by date range, and enter the weekly odometer readings (a Monday box and a Friday box per vehicle for the chosen week). Liters are split equally across the days (inclusive);
   overlapping entries add up.
 - **Checks**: missing Monday readings, odometer going down, unusual km/L, distance with no fuel, duplicate fuel entries.
 - **Maintenance**: latest odometer vs last PM odometer + PM interval -> overdue / due soon / OK; CSV export and a link to the PM/CM monitoring site.
@@ -45,7 +45,7 @@ The laptop layout is unchanged.
 
 ## How the numbers work
 - Daily fuel = date-range entries + anything typed in the grid
-- Odometer: enter the actual reading every Monday (any day works) in the Odometer row.
+- Odometer: enter the actual reading every Monday and Friday on the Input tab (any day also works in the Odometer row).
   Between two readings, the distance (difference of the readings) is shared out by ratio and proportion
   of the fuel used each day. km/L is not used in the formula.
 - Month km and First/Last odo are computed from those readings.
