@@ -2,7 +2,8 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Vehicle Fuel Log</title>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7f9;--card:#fff;--tx:#1b2430;--mut:#6b7686;--bd:#d9dee5;--ac:#1f6feb;--hd:#e9edf3;--wk:#f1f4f8}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12161c;--card:#1a2029;--tx:#e6eaf0;--mut:#8f9aab;--bd:#2c3542;--ac:#5b9dff;--hd:#232b37;--wk:#1f2631;--hb:#233b66}}
@@ -43,7 +44,7 @@ td.wk{background:var(--wk)}td.wk input{background:transparent}
  html,body{overflow-x:hidden}
  body{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
  header{padding:10px 12px;gap:8px}header h1{font-size:17px}header p{font-size:12px}header p:not(#sync){display:none}header>div{min-width:100%}
- header select,header button{flex:1 1 30%;min-height:40px;font-size:15px}
+ header select{flex:1 1 38%;min-height:40px;font-size:15px}header button{flex:0 0 auto;min-height:40px;font-size:15px;padding:6px 16px}
  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:60;margin:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--bd);flex-wrap:nowrap;gap:4px;box-shadow:0 -2px 8px #0002}
  .tabs button{flex:1;min-width:0;padding:10px 2px;font-size:11px;border-radius:8px}
  .tabs button .lg{display:none}.tabs button .sm{display:inline}
@@ -72,8 +73,13 @@ td.wk{background:var(--wk)}td.wk input{background:transparent}
  table.el.cd td,table.el.cd th{display:flex;justify-content:space-between;align-items:center;gap:10px;border:0;padding:3px 0;font-size:14px;text-align:right}
  table.el.cd td::before,table.el.cd th::before{content:attr(data-l);color:var(--mut);text-align:left;font-weight:400}
 }
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1b2430;color:#fff;padding:10px 16px;border-radius:8px;z-index:9000;opacity:0;pointer-events:none;transition:opacity .2s;max-width:92%;box-shadow:0 4px 14px #0004}
+#toast.on{opacity:1;pointer-events:auto}#toast button{margin-left:10px;padding:2px 10px;background:#f7931e;border-color:#f7931e;color:#fff}
+th.today{background:color-mix(in srgb,#f7931e 30%,var(--hd))!important}td.today{background:color-mix(in srgb,#f7931e 12%,var(--card))}td.today input{background:transparent}
+.help ol{margin:6px 0 0;padding-left:20px}.help li{margin:3px 0}
+@media(max-width:700px){#toast{bottom:84px}}
 @media print{header,.tabs,#gate,.nop,[data-p]:not(#prep){display:none!important}#prep{display:block!important}body{background:#fff!important}.card{box-shadow:none;border:0}}
-html[data-bg="pattern"] body{background-image:radial-gradient(circle at 1px 1px,color-mix(in srgb,var(--ac) 18%,transparent) 1px,transparent 0),linear-gradient(180deg,color-mix(in srgb,var(--ac) 10%,transparent),transparent 360px);background-size:22px 22px,100% 100%;background-attachment:fixed}
+html[data-bg="pattern"] body{background-image:radial-gradient(circle at 1px 1px,color-mix(in srgb,var(--ac) 9%,transparent) 1px,transparent 0),linear-gradient(180deg,color-mix(in srgb,var(--ac) 6%,transparent),transparent 360px);background-size:26px 26px,100% 100%;background-attachment:fixed}
 html[data-bg="image"] body{background-image:linear-gradient(color-mix(in srgb,var(--bg) 78%,transparent),color-mix(in srgb,var(--bg) 78%,transparent)),var(--bgimg);background-size:cover;background-position:center;background-attachment:fixed}
 :root[data-theme="forest"]{--hb:#1e7a46;--bg:#f1f6f2;--card:#fff;--tx:#17231b;--mut:#5d7164;--bd:#cfdcd2;--ac:#1e7a46;--hd:#e1eee5;--wk:#eef5f0}
 :root[data-theme="amber"]{--hb:#b45f00;--bg:#faf6ee;--card:#fffdf8;--tx:#2a2112;--mut:#7a6b52;--bd:#e5d9bf;--ac:#b45f00;--hd:#f3e8cf;--wk:#f8f0de}
@@ -84,26 +90,80 @@ html[data-bg="image"] body{background-image:linear-gradient(color-mix(in srgb,va
 :root[data-theme="dpwh"] body{font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 :root[data-theme="dpwh"] .tabs button.on,:root[data-theme="dpwh"] button.p{background:#f7931e;border-color:#f7931e;color:#fff}
 :root[data-theme="dpwh"] .tabs{margin-top:8px}
+
+/* ---- refined look ---- */
+.logo{height:58px;width:auto;display:block}.logo.big{height:84px;margin:0 auto 4px}
+header>.logo{margin-right:2px}
+body{font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.45;font-variant-numeric:tabular-nums lining-nums}
+h1{font-family:"Source Serif 4",Georgia,"Times New Roman",serif;font-weight:600;font-size:26px;letter-spacing:.01em;margin:0 0 4px}
+header{background-image:repeating-linear-gradient(135deg,#ffffff0d 0 1px,transparent 1px 10px),linear-gradient(90deg,#ffffff00,#00000033);padding:20px 28px;gap:12px}
+header p{line-height:1.5}
+.card,.wrap{box-shadow:none;border-radius:6px}
+.card{padding:12px 18px 14px}
+.card summary,.card>b:first-child{display:block;font-size:15px;font-weight:600;padding:2px 0 9px;margin-bottom:8px;border-bottom:1px solid var(--bd)}
+input,select,button{border-radius:4px;transition:background .15s,border-color .15s,box-shadow .15s}
+input:focus,select:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 22%,transparent)}
+button:focus-visible{outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 28%,transparent)}
+button{font-weight:500}button:hover{background:color-mix(in srgb,var(--ac) 8%,var(--card))}
+button.p,:root[data-theme="dpwh"] button.p{font-weight:600}button.p:hover{filter:brightness(1.06);background:var(--ac)}
+:root[data-theme="dpwh"] button.p:hover{background:#f7931e}
+header button:hover,header select:hover{background:#ffffff40}
+thead th{background:color-mix(in srgb,var(--ac) 7%,var(--card));font-weight:600;color:var(--tx)}
+tfoot td{background:color-mix(in srgb,var(--ac) 7%,var(--card))}
+thead .c1,thead .c2,thead .c3,tfoot .c1,tfoot .c2,tfoot .c3{background:color-mix(in srgb,var(--ac) 7%,var(--card))}
+.c3{box-shadow:3px 0 6px -3px #14213d40}
+.tot{background:color-mix(in srgb,var(--ac) 5%,var(--card))}
+td.od{background-color:color-mix(in srgb,var(--ac) 4%,var(--card))}
+td.od.wk{background-color:var(--wk)}
+td.today,td.od.today{background-color:color-mix(in srgb,#f7931e 13%,var(--card))}
+tbody tr:hover td.c1,tbody tr:hover td.c3{background-color:color-mix(in srgb,var(--ac) 6%,var(--card))}
+.el th{background:color-mix(in srgb,var(--ac) 7%,var(--card));font-weight:600;text-align:left}
+.tile{background:var(--card);border-radius:6px;padding:12px 18px}.tile b{font-family:"Source Serif 4",Georgia,serif;font-size:26px;font-weight:600;margin-top:2px}
+.bar2 i{border-radius:2px;background:linear-gradient(90deg,var(--ac),color-mix(in srgb,var(--ac) 60%,#fff))}
+#gate{background-image:repeating-linear-gradient(135deg,#ffffff0a 0 1px,transparent 1px 12px),linear-gradient(160deg,var(--hb,var(--ac)),color-mix(in srgb,var(--hb,var(--ac)) 60%,#000))}
+.gbox{border:0;border-top:4px solid #f7931e;border-radius:6px;padding:30px 28px;gap:12px;box-shadow:0 26px 60px -22px #000b}
+.gbox h2{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:26px}
+@media(min-width:701px){
+ .tabs,:root[data-theme="dpwh"] .tabs{padding:0 24px;gap:2px;margin:0 0 14px;background:var(--card);border-bottom:1px solid var(--bd)}
+ .tabs button{border:0;border-bottom:3px solid transparent;border-radius:0;background:transparent;padding:14px 18px 11px;font-weight:600;color:var(--mut)}
+ .tabs button:hover{background:transparent;color:var(--tx)}
+ .tabs button.on,:root[data-theme="dpwh"] .tabs button.on{background:transparent;color:var(--ac);border-bottom-color:#f7931e}
+ .bar{padding:6px 24px 10px}.card{margin:0 24px 14px}.wrap{margin:0 24px 28px}
+}
+@media(max-width:700px){
+ header{padding:12px 14px}h1{font-size:20px}header>.logo{height:40px}
+ .tabs{background:var(--card)}
+ .tabs button{border:0;border-top:3px solid transparent;border-radius:0;background:transparent;color:var(--mut);font-weight:600}
+ .tabs button.on,:root[data-theme="dpwh"] .tabs button.on{background:transparent;color:var(--ac);border-top-color:#f7931e}
+ .card{padding:10px 14px 12px}
+}
 </style></head><body>
-<div id="gate"><div class="gbox"><h2>Vehicle Fuel Log</h2><p class="mut" id="gmsg">Enter the password to continue.</p><input type="password" id="gpw" placeholder="Password" autocomplete="current-password"><button id="ggo" class="p">Unlock</button></div></div>
-<header><div><h1>Vehicle Fuel Log</h1><p>Enter fuel on the Input tab and the actual odometer every Monday on the Monitoring tab. Daily odometer is computed by ratio and proportion of the fuel used.</p><p id="sync"></p><button id="mig" class="hide" style="margin-top:6px">Upload this browser's saved data to shared</button></div><select id="theme" title="Theme"><option value="dpwh">Theme: DPWH</option><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="forest">Forest</option><option value="amber">Amber</option><option value="ocean">Ocean</option></select><select id="bg" title="Background"><option value="pattern">Background: Pattern</option><option value="plain">Plain</option><option value="image">My image…</option></select><input type="file" id="bgfile" accept="image/*" class="hide"><button id="lock" title="Lock the page">Lock</button></header>
+<div id="toast"></div>
+<div id="gate"><div class="gbox"><img class="logo big" src="logo.png" alt="DPWH logo" onerror="this.remove()"><h2>Vehicle Fuel Log</h2><p class="mut" id="gmsg">Enter the password to continue.</p><input type="password" id="gpw" placeholder="Password" autocomplete="current-password"><button id="ggo" class="p">Unlock</button></div></div>
+<header><img class="logo" src="logo.png" alt="DPWH logo" onerror="this.remove()"><div><h1>Vehicle Fuel Log</h1><p>Enter fuel on the Input tab and the actual odometer every Monday on the Monitoring tab. Daily odometer is computed by ratio and proportion of the fuel used.</p><p id="sync"></p><button id="mig" class="hide" style="margin-top:6px">Upload this browser's saved data to shared</button></div><select id="theme" title="Theme"><option value="dpwh">Theme: DPWH</option><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="forest">Forest</option><option value="amber">Amber</option><option value="ocean">Ocean</option></select><select id="bg" title="Background"><option value="pattern">Background: Pattern</option><option value="plain">Plain</option><option value="image">My image…</option></select><input type="file" id="bgfile" accept="image/*" class="hide"><button id="lock" title="Lock the page">Lock</button></header>
 <div class="tabs"><button data-t="in"><span class="lg">Input</span><span class="sm">Input</span></button><button data-t="mon"><span class="lg">Monitoring</span><span class="sm">Monitor</span></button><button data-t="chk"><span class="lg">Checks</span><span class="sm">Checks</span></button><button data-t="pm"><span class="lg">Maintenance</span><span class="sm">PM</span></button><button data-t="rep"><span class="lg">Reports</span><span class="sm">Reports</span></button><button data-t="set"><span class="lg">Settings</span><span class="sm">Settings</span></button></div>
 <div class="bar" data-p="mon">
-<input type="month" id="month"><select id="week"></select>
+<input type="month" id="month"><select id="week"></select><button id="today" title="Go to the current week">Today</button>
 <input type="search" id="q" placeholder="Search vehicle or plate…">
 <button id="exp" class="p">Export CSV</button>
 <button id="imp">Import CSV</button><input type="file" id="file" accept=".csv" class="hide">
 <button id="clr">Clear month</button>
 <span class="stat"><b id="gt">0</b> L · <b id="gk">0</b> km</span>
 </div>
+<details class="card help" data-p="in" id="help"><summary>How to use this page</summary>
+<ol><li><b>Add fuel</b> below: pick the vehicle, the liters, and the dates. The liters are shared equally across the days.</li>
+<li><b>Every Monday</b>, type each vehicle's actual odometer in "Weekly odometer readings".</li>
+<li><b>Monitoring</b> shows each day's fuel and the odometer worked out from it. Bold = a reading you typed; grey italic = computed.</li>
+<li><b>Checks</b> finds mistakes, <b>Maintenance</b> shows which vehicles are due for PM, and <b>Reports</b> gives the monthly summary.</li></ol></details>
 <details class="card" data-p="in" open><summary>Add fuel by date range</summary>
 <div class="row"><input id="ev" list="vl" placeholder="Vehicle no. or plate"><datalist id="vl"></datalist><input type="number" id="eliters" inputmode="decimal" placeholder="Liters" step="any" min="0" style="width:100px"><label class="mut">From <input type="date" id="ef"></label><label class="mut">To <input type="date" id="et"></label><button id="ea" class="p">Add fuel</button><span id="emsg"></span></div>
 <p class="mut" style="margin:0 0 6px">Liters are split equally across the days (From to To, inclusive). Overlapping entries add up.</p>
 <div id="elist" style="overflow:auto"></div></details>
 <details class="card" data-p="in" open><summary>Weekly odometer readings</summary>
-<div class="row"><button id="odprev">◀ Previous week</button><input type="date" id="odd"><button id="odnext">Next week ▶</button><input type="search" id="odq" placeholder="Search vehicle or plate…"><span id="odmsg" class="mut"></span></div>
+<div class="row"><button id="odprev">◀ Previous week</button><input type="date" id="odd"><button id="odnext">Next week ▶</button><input type="search" id="odq" placeholder="Search vehicle or plate…"><span id="odmsg" class="mut"></span><label class="mut"><input type="checkbox" id="odmiss"> Show only vehicles with no reading</label><span id="odprog" class="mut"></span></div>
 <p class="mut" style="margin:0 0 6px">Type the actual odometer for the date shown (usually Monday). It saves as you type. Clear a box to remove a reading.</p>
 <div id="odlist" style="overflow:auto;max-height:440px"></div></details>
+<p class="mut" data-p="mon" style="margin:0 16px 6px;font-size:12px">Odometer row: <b>bold</b> = a reading you typed &middot; <i>grey italic</i> = computed from the fuel. Weekend days with no fuel are left blank. Today is highlighted.</p>
 <div class="wrap" data-p="mon"><table id="t"><thead></thead><tbody></tbody><tfoot></tfoot></table></div>
 <div data-p="chk" class="hide"><div class="card"><b>Data checks</b> <span class="mut" id="chkm"></span>
 <div class="row"><label class="mut">Missing readings for <input type="date" id="chkd"></label><button id="chkgo" class="p">Run checks</button></div>
@@ -282,8 +342,8 @@ $("#ea").onclick=()=>{
  if(!f){M.textContent="Enter the start date.";return}
  if(ud(t)<ud(f)){M.textContent="End date is before the start date.";return}
  if((ud(t)-ud(f))/864e5>366){M.textContent="Date range is too long.";return}
- M.textContent="";addEN({v:v.id,l,f,t});$("#eliters").value=""};
-$("#elist").addEventListener("click",e=>{const k=e.target.dataset.k;if(k===undefined)return;const x=EN[+k];EN.splice(+k,1);if(DB&&x&&x.k)DB.doc("entries/"+x.k).delete().catch(()=>{});else saveEN();renderEN();totals()});
+ M.textContent="";addEN({v:v.id,l,f,t});$("#eliters").value="";toast("Added "+l+" L to "+v.id+" ("+(f===t?f:f+" to "+t)+") \u2713")};
+$("#elist").addEventListener("click",e=>{const k=e.target.dataset.k;if(k===undefined)return;const x=EN[+k];EN.splice(+k,1);if(DB&&x&&x.k)DB.doc("entries/"+x.k).delete().catch(()=>{});else saveEN();renderEN();totals();if(x)toast("Entry deleted",()=>addEN({v:x.v,l:x.l,f:x.f,t:x.t}))});
 const key=()=>"fuel:"+mEl.value;
 const FIREBASE={projectId:"bid-monitoring-f1308",apiKey:"AIzaSyBfL_LTNUoO28ls9KEsKreMdXHwfHFqndo"}; // GitHub Pages version: paste your Firebase web apiKey here (same project as the bid monitoring site)
 function fsAdapter(cfg){const base="https://firestore.googleapis.com/v1/projects/"+cfg.projectId+"/databases/(default)/documents/",k="key="+encodeURIComponent(cfg.apiKey);let lw=0;
@@ -345,14 +405,14 @@ function fillWeeks(){const [y,m]=mEl.value.split("-").map(Number),n=new Date(y,m
  const r=rs.find(r=>cur>=r[0]&&cur<=r[1])||rs[0];W.value=r[0]+"-"+r[1]}
 function build(){
  const pre="";const [y,m]=mEl.value.split("-").map(Number);days=new Date(y,m,0).getDate();load();const rv=$("#week").value;if(rv==="0"){d0=1;d1=days}else{const p=rv.split("-").map(Number);d0=p[0];d1=p[1]}
- let h='<tr><th class="c1">Vehicle</th><th class="c2">Plate</th><th class="c3"></th>',f='<tr><td class="c1">Total</td><td class="c2"></td><td class="c3">Fuel (L)</td>';
- for(let d=d0;d<=d1;d++){h+=`<th>${d}<br><small>${"Sun Mon Tue Wed Thu Fri Sat".split(" ")[new Date(y,m-1,d).getDay()]}</small></th>`;f+=`<td id="ct${d}">0</td>`}
+ const tn=new Date(),isT=d=>tn.getFullYear()===y&&tn.getMonth()+1===m&&tn.getDate()===d;let h='<tr><th class="c1">Vehicle</th><th class="c2">Plate</th><th class="c3"></th>',f='<tr><td class="c1">Total</td><td class="c2"></td><td class="c3">Fuel (L)</td>';
+ for(let d=d0;d<=d1;d++){h+=`<th${isT(d)?' class="today"':""}>${d}<br><small>${"Sun Mon Tue Wed Thu Fri Sat".split(" ")[new Date(y,m-1,d).getDay()]}</small></th>`;f+=`<td id="ct${d}">0</td>`}
  h+='<th>Week L</th><th>Month L</th><th>Month km</th><th>First odo</th><th>Last odo</th></tr>';f+='<td id="wt2">0</td><td id="gt2">0</td><td id="gk2">0</td><td></td><td></td></tr>';
  $("#t thead").innerHTML=h;$("#t tfoot").innerHTML=f;
  let b="";
  V.forEach((v,i)=>{let ob="";const sk=(v.id+" "+v.plate).toLowerCase();b+=`<tr data-i="${i}" data-s="${sk}"><td class="c1" rowspan="2">${v.id}<small class="pl">${v.plate}</small></td><td class="c2" rowspan="2">${v.plate}</td><td class="c3">Fuel (L)</td>`;
   for(let d=d0;d<=d1;d++){const w=[0,6].includes(new Date(y,m-1,d).getDay());const val=(data[v.id]||{})[pre+d];
-   b+=`<td class="${w?"wk":""}"><input type="number" step="any" min="0" inputmode="decimal" id="f${i}_${d}" data-v="${v.id}" data-d="${pre+d}" value=""></td>`;ob+=`<td class="${w?"wk":""} od${new Date(y,m-1,d).getDay()===1?" mon":""}"><input type="number" step="any" min="0" inputmode="decimal" class="odo" id="o${i}_${d}" data-v="${v.id}" data-d="o${d}" value="${(data[v.id]||{})["o"+d]??""}"></td>`}
+   b+=`<td class="${w?"wk":""}${isT(d)?" today":""}"><input type="number" step="any" min="0" inputmode="decimal" id="f${i}_${d}" data-v="${v.id}" data-d="${pre+d}" value=""></td>`;ob+=`<td class="${w?"wk":""}${isT(d)?" today":""} od${new Date(y,m-1,d).getDay()===1?" mon":""}"><input type="number" step="any" min="0" inputmode="decimal" class="odo" id="o${i}_${d}" data-v="${v.id}" data-d="o${d}" value="${(data[v.id]||{})["o"+d]??""}"></td>`}
   b+=`<td class="tot" rowspan="2" id="wk${i}"></td><td class="tot" rowspan="2" id="rt${i}"></td><td class="tot" rowspan="2" id="rk${i}"></td><td class="tot" rowspan="2" id="rf${i}"></td><td class="tot" rowspan="2" id="rl${i}"></td></tr><tr class="or" data-s="${sk}"><td class="c3">Odometer</td>${ob}</tr>`});
  $("#t tbody").innerHTML=b;totals();filter();
 }
@@ -369,10 +429,11 @@ function setRead(v,ds,val){
 function renderOd(){const ds=$("#odd").value;if(!ds)return;const q=$("#odq").value.trim().toLowerCase(),src=odSrc(ds),k="o"+(+ds.slice(8));
  $("#odmsg").textContent=new Date(ds+"T00:00:00").toLocaleDateString("en",{weekday:"long"})+(new Date(ds+"T00:00:00").getDay()===1?"":" — readings are usually taken on Mondays");
  let h='<table class="el"><tr><th>Vehicle</th><th>Plate</th><th>Odometer reading</th></tr>';
- V.forEach(v=>{if(q&&!(v.id+" "+v.plate).toLowerCase().includes(q))return;const r=(src[v.id]||{})[k];h+=`<tr><td>${v.id}</td><td>${v.plate}</td><td><input type="number" step="any" min="0" inputmode="decimal" class="orin" data-v="${v.id}" value="${r===undefined?"":r}" style="width:140px;text-align:right"></td></tr>`});
- $("#odlist").innerHTML=h+'</table>'}
+ V.forEach(v=>{if(q&&!(v.id+" "+v.plate).toLowerCase().includes(q))return;const r=(src[v.id]||{})[k];if($("#odmiss").checked&&r!==undefined&&r!=="")return;h+=`<tr><td>${v.id}</td><td>${v.plate}</td><td><input type="number" step="any" min="0" inputmode="decimal" class="orin" data-v="${v.id}" value="${r===undefined?"":r}" style="width:140px;text-align:right"></td></tr>`});
+ $("#odlist").innerHTML=h+'</table>';progOd()}
+function progOd(){const ds=$("#odd").value;if(!ds)return;const src=odSrc(ds),k="o"+(+ds.slice(8));const n=V.filter(v=>{const r=(src[v.id]||{})[k];return r!==undefined&&r!==""}).length;$("#odprog").textContent=n+" of "+V.length+" vehicles have a reading"+(n===V.length?" ✓":"")}
 function syncOd(){const ds=$("#odd").value;if(!ds)return;const src=odSrc(ds),k="o"+(+ds.slice(8));
- document.querySelectorAll("#odlist .orin").forEach(el=>{if(document.activeElement!==el){const r=(src[el.dataset.v]||{})[k];el.value=r===undefined?"":r}})}
+ document.querySelectorAll("#odlist .orin").forEach(el=>{if(document.activeElement!==el){const r=(src[el.dataset.v]||{})[k];el.value=r===undefined?"":r}});progOd()}
 $("#odlist").addEventListener("input",e=>{const t=e.target;if(t.dataset.v)setRead(t.dataset.v,$("#odd").value,t.value.trim())});
 $("#odd").addEventListener("change",renderOd);$("#odq").addEventListener("input",renderOd);
 const shiftOd=n=>{const ds=$("#odd").value||lastMon(),t=new Date(ds+"T00:00:00");t.setDate(t.getDate()+n);$("#odd").value=ymd(t);renderOd()};
@@ -435,7 +496,14 @@ const n=new Date();mEl.value=n.getFullYear()+"-"+String(n.getMonth()+1).padStart
 const cfg=()=>Object.assign({pmDef:5000,pmWarn:500,minEff:1.5,maxEff:25,pmUrl:""},META.settings.cfg||{});
 const dl=(name,text)=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:"text/csv"}));a.download=name;a.click()};
 const fillVL=()=>{$("#vl").innerHTML=V.map(v=>`<option value="${esc(v.id)}">${esc(v.plate)}</option>`).join("")};
-let TAB="in",sReady=true;
+let TAB="in",sReady=true,tt=null;
+function toast(m,undo){const t=$("#toast");t.innerHTML=esc(m)+(undo?' <button id="tundo">Undo</button>':"");t.classList.add("on");if(undo)$("#tundo").onclick=()=>{undo();t.classList.remove("on")};clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),undo?6000:2200)}
+$("#odmiss").addEventListener("change",renderOd);
+$("#odlist").addEventListener("change",()=>toast("Reading saved \u2713"));
+$("#today").onclick=()=>{const n=new Date();mEl.value=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0");mEl.dispatchEvent(new Event("change"))};
+["ev","eliters","ef","et"].forEach(i=>$("#"+i).addEventListener("keydown",e=>{if(e.key==="Enter")$("#ea").click()}));
+$("#ef").addEventListener("change",()=>{$("#et").value=$("#ef").value});
+try{if(!localStorage.getItem("fuel:seen")){$("#help").open=true;localStorage.setItem("fuel:seen","1")}}catch(e){}
 function show(p){TAB=p;window.scrollTo(0,0);document.querySelectorAll("[data-p]").forEach(e=>e.classList.toggle("hide",e.dataset.p!==p));
  document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===p));
  if(p==="chk")renderChk();if(p==="pm")renderPM();if(p==="rep"){$("#rm").value=mEl.value;renderRep()}if(p==="set")renderSet()}

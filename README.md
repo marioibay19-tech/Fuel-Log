@@ -23,6 +23,11 @@ Settings -> Change password. The new password is stored in the shared database, 
 This is a light lock to keep casual visitors out. It is not strong security: the data itself is protected only by
 the Firestore rules, and anyone who can read the page code could bypass the screen.
 
+## Logo
+To show the DPWH logo in the header, on the password screen and as the browser tab icon, upload a file named
+`logo.png` to the repository next to `index.html` (transparent background, at least 300 px wide). Without that file nothing is shown.
+Use the official copy of the logo from the DPWH Intranet.
+
 ## Phones
 On a phone the tabs become a bar at the bottom, the weekly odometer list shows one card per vehicle with a large number box,
 the Monitoring grid keeps the vehicle column fixed while the days scroll sideways, and the other tables turn into cards.
